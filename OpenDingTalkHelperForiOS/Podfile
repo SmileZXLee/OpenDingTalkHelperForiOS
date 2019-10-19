@@ -1,0 +1,8 @@
+platform :ios, '8.0'
+target 'OpenDingTalkHelperForiOS' do
+	pod 'ZXTableView'
+	pod 'ZXEmptyView'
+	pod 'ZXDataHandle'
+  pod 'ZXSlideSelectTableView'
+  pod 'BRPickerView'
+end

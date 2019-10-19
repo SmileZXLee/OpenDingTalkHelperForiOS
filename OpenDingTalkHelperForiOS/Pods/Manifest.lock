@@ -1,0 +1,33 @@
+PODS:
+  - BRPickerView (2.3.0)
+  - ZXDataHandle (1.0.7)
+  - ZXEmptyView (1.0.5)
+  - ZXSlideSelectTableView (1.0.4):
+    - ZXTableView
+  - ZXTableView (1.0.8)
+
+DEPENDENCIES:
+  - BRPickerView
+  - ZXDataHandle
+  - ZXEmptyView
+  - ZXSlideSelectTableView
+  - ZXTableView
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BRPickerView
+    - ZXDataHandle
+    - ZXEmptyView
+    - ZXSlideSelectTableView
+    - ZXTableView
+
+SPEC CHECKSUMS:
+  BRPickerView: 61a314b55bec350650192d23d97ef1e4806cafbf
+  ZXDataHandle: eefdd627231452565c44bc87857ded67b46275d4
+  ZXEmptyView: df7b0a484ce515923a911aa50f6f997449cdfa78
+  ZXSlideSelectTableView: 850bb5aae3abc02378966f51cef1d85d26c8c1f1
+  ZXTableView: 0f68a3cfd9610d93bdfb84c2d3b1160255e368e2
+
+PODFILE CHECKSUM: 0321e6bbafa725cb82ceed3885d059dd5aa053fd
+
+COCOAPODS: 1.6.1

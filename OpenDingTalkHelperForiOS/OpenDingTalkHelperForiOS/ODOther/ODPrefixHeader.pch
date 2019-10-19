@@ -1,0 +1,19 @@
+//
+//  ODPrefixHeader.pch
+//  OpenDingTalkHelperForiOS
+//
+//  Created by 李兆祥 on 2019/10/16.
+//  Copyright © 2019 ZXLee. All rights reserved.
+//  https://github.com/SmileZXLee/OpenDingTalkHelperForiOS
+
+#ifndef ODPrefixHeader_pch
+#define ODPrefixHeader_pch
+#import "ZXTableView.h"
+#import "ZXEmptyView.h"
+#import "ZXDataHandle.h"
+#import "ODBaseUtil.h"
+#import "FeatureGuideView.h"
+
+#define ODMainColor [UIColor colorWithRed:7/255.0 green:139/255.0 blue:231/255.0 alpha:1]
+
+#endif /* ODPrefixHeader_pch */
