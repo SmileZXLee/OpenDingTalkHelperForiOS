@@ -7,8 +7,8 @@
 * 选择器控件: [BRPickerView](https://github.com/91renb/BRPickerView)
 * 快速构建TableView: [ZXTableView](https://github.com/SmileZXLee/ZXTableView)
 * 滑动选择TableView: [ZXSlideSelectTableView](https://github.com/SmileZXLee/ZXSlideSelectTableView)
-* 空数据与网络错误视图: [ZXEmptyView](https://github.com/SmileZXLee/ZXTableView/ZXEmptyView)
-* 数据处理与数据存储: [ZXDataHandle](https://github.com/SmileZXLee/ZXTableView/ZXDataHandle)
+* 空数据与网络错误视图: [ZXEmptyView](https://github.com/SmileZXLee/ZXEmptyView)
+* 数据处理与数据存储: [ZXDataHandle](https://github.com/SmileZXLee/ZXDataHandle)
 
 ## OpenDingTalkHelperForiOS的开发离不开[@kunlingyijia](https://github.com/kunlingyijia)的idea和建议
 ## 功能简介
