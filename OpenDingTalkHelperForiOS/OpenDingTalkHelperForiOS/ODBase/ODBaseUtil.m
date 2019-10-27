@@ -254,9 +254,8 @@
     NSCalendarUnit type = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *cmps = [calendar components:type fromDate:date toDate:[fullFormat dateFromString:fullNextStr] options:0];
     long disSec = cmps.day * 24 * 60 * 60 + cmps.hour * 60 * 60 + cmps.minute * 60 + cmps.second;
-    if(disSec < 0){
-        //[self addLocalNoticeNextMs:nextMs];
-        [self showToast:@"定时任务设置失败，请联系开发者"];
+    if(disSec <= 0){
+        [self showToast:@"定时任务设置失败，请将系统时间设置为24小时制"];
         return fullNextStr;
     }
     if(@available(iOS 10.0, *)) {
