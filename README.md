@@ -11,6 +11,8 @@
 * 数据处理与数据存储: [ZXDataHandle](https://github.com/SmileZXLee/ZXDataHandle)
 
 ## OpenDingTalkHelperForiOS的开发离不开[@kunlingyijia](https://github.com/kunlingyijia)的idea和建议
+## 注意
+* 手机系统时间必须修改为24小时制
 ## 功能简介
 * 此应用【钉钉定时打卡助手】仅限用于定时打开钉钉，非定位修改软件，使用时请确保已打开钉钉极速打卡且设备在打卡范围之内。
 * 【权限授予】您必须授予【钉钉定时打卡助手】通知权限，且第一次跳转至钉钉时点击“允许”才可以正常使用定时跳转功能。
