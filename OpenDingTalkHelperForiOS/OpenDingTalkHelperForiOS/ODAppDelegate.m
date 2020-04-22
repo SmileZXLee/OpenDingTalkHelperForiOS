@@ -7,10 +7,11 @@
 //  https://github.com/SmileZXLee/OpenDingTalkHelperForiOS
 
 #import "ODAppDelegate.h"
+#import "ODSecurityVC.h"
 #import "ODHomeVC.h"
 #import <UserNotifications/UserNotifications.h>
 @interface ODAppDelegate ()<UNUserNotificationCenterDelegate>
-
+@property (nonatomic, weak) UIVisualEffectView *coverEffectview ;
 @end
 
 @implementation ODAppDelegate
@@ -26,6 +27,7 @@
     [self setNotificationCenter];
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [[UIBarButtonItem appearance] setTintColor:[UIColor darkGrayColor]];
+    [self removeCoverEffectviewAndShowSecurity:YES];
     return YES;
 }
 
@@ -51,7 +53,40 @@ API_AVAILABLE(ios(10.0)){
 }
 
 - (void)receiveNotification{
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"od_receiveNotification" object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:ODReceiveNotificationKey object:nil];
+}
+
+
+
+- (void)addCoverEffectview{
+    if(self.coverEffectview)return;
+    BOOL enableSecurity = [ZXDataStoreCache readBoolForKey:ODSecurityKey];
+    if(enableSecurity){
+        UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        UIVisualEffectView *effectview = [[UIVisualEffectView alloc] initWithEffect:blur];
+        effectview.frame = self.window.bounds;
+        [self.window addSubview:effectview];
+        self.coverEffectview = effectview;
+    }
+}
+
+- (void)removeCoverEffectviewAndShowSecurity:(BOOL)doVerify{
+    BOOL enableSecurity = [ZXDataStoreCache readBoolForKey:ODSecurityKey];
+    if(enableSecurity){
+        if(![[ODBaseUtil getTopVC] isKindOfClass:[ODSecurityVC class]]){
+            ODSecurityVC *VC = [[ODSecurityVC alloc]init];
+            if(doVerify){
+                VC.type = ODSecurityTypeDoVerify;
+            }else{
+                VC.type = ODSecurityTypeShowCover;
+            }
+            [self.window.rootViewController presentViewController:VC animated:NO completion:nil];
+        }
+        
+        if(self.coverEffectview){
+            [self.coverEffectview removeFromSuperview];
+        }
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -61,14 +96,14 @@ API_AVAILABLE(ios(10.0)){
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self addCoverEffectview];
 }
 
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     [application setApplicationIconBadgeNumber:0];
     [application cancelAllLocalNotifications];
+    [self removeCoverEffectviewAndShowSecurity:YES];
 }
 
 

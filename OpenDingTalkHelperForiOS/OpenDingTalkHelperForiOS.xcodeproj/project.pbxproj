@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5C3156A77FE11DC516DD6269 /* libPods-OpenDingTalkHelperForiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 293FA13B07376723A6CB9D17 /* libPods-OpenDingTalkHelperForiOS.a */; };
+		7437ECEE244F265B003B3470 /* ODSecurityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7437ECEC244F265A003B3470 /* ODSecurityVC.m */; };
+		7437ECEF244F265B003B3470 /* ODSecurityVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7437ECED244F265A003B3470 /* ODSecurityVC.xib */; };
 		744AAA0523575A6E00322757 /* ODAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 744AAA0423575A6E00322757 /* ODAppDelegate.m */; };
 		744AAA0D23575A7100322757 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744AAA0C23575A7100322757 /* Assets.xcassets */; };
 		744AAA1023575A7100322757 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 744AAA0E23575A7100322757 /* LaunchScreen.storyboard */; };
@@ -51,6 +53,10 @@
 /* Begin PBXFileReference section */
 		1AE2D4541150BEF7F0B6C67A /* Pods-OpenDingTalkHelperForiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenDingTalkHelperForiOS.debug.xcconfig"; path = "Target Support Files/Pods-OpenDingTalkHelperForiOS/Pods-OpenDingTalkHelperForiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		293FA13B07376723A6CB9D17 /* libPods-OpenDingTalkHelperForiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OpenDingTalkHelperForiOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7437ECEB244F265A003B3470 /* ODSecurityVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ODSecurityVC.h; sourceTree = "<group>"; };
+		7437ECEC244F265A003B3470 /* ODSecurityVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ODSecurityVC.m; sourceTree = "<group>"; };
+		7437ECED244F265A003B3470 /* ODSecurityVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ODSecurityVC.xib; sourceTree = "<group>"; };
+		7437ECF024501732003B3470 /* ODConsts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ODConsts.h; sourceTree = "<group>"; };
 		744AAA0023575A6E00322757 /* OpenDingTalkHelperForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenDingTalkHelperForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		744AAA0323575A6E00322757 /* ODAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ODAppDelegate.h; sourceTree = "<group>"; };
 		744AAA0423575A6E00322757 /* ODAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ODAppDelegate.m; sourceTree = "<group>"; };
@@ -140,6 +146,40 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		7437ECE7244F25F7003B3470 /* ODSecurity */ = {
+			isa = PBXGroup;
+			children = (
+				7437ECE9244F25F7003B3470 /* Model */,
+				7437ECEA244F25F7003B3470 /* View */,
+				7437ECE8244F25F7003B3470 /* Controller */,
+			);
+			path = ODSecurity;
+			sourceTree = "<group>";
+		};
+		7437ECE8244F25F7003B3470 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7437ECEB244F265A003B3470 /* ODSecurityVC.h */,
+				7437ECEC244F265A003B3470 /* ODSecurityVC.m */,
+				7437ECED244F265A003B3470 /* ODSecurityVC.xib */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7437ECE9244F25F7003B3470 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7437ECEA244F25F7003B3470 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		744AA9F723575A6E00322757 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +209,7 @@
 				74B6864823595D2B00804DB9 /* ODWeekSelect */,
 				74B686322358B5A200804DB9 /* ODHistory */,
 				74B686422358CC5B00804DB9 /* ODHelp */,
+				7437ECE7244F25F7003B3470 /* ODSecurity */,
 				744AAA4623581E3500322757 /* ThirdParty */,
 				744AAA0323575A6E00322757 /* ODAppDelegate.h */,
 				744AAA0423575A6E00322757 /* ODAppDelegate.m */,
@@ -206,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				744AAA2923575E5B00322757 /* ODPrefixHeader.pch */,
+				7437ECF024501732003B3470 /* ODConsts.h */,
 			);
 			path = ODOther;
 			sourceTree = "<group>";
@@ -353,7 +395,7 @@
 				744AA9FC23575A6E00322757 /* Sources */,
 				744AA9FD23575A6E00322757 /* Frameworks */,
 				744AA9FE23575A6E00322757 /* Resources */,
-				EE93932B32CD64405363B417 /* [CP] Copy Pods Resources */,
+				CF39C1A9A6D3C5DECA2297F1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -433,6 +475,7 @@
 				744AAA342357601000322757 /* ODHomeVC.xib in Resources */,
 				74B6865423595F8400804DB9 /* ODWeekSelectCell.xib in Resources */,
 				74B6863E2358B5FE00804DB9 /* ODHistoryCell.xib in Resources */,
+				7437ECEF244F265B003B3470 /* ODSecurityVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,7 +511,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EE93932B32CD64405363B417 /* [CP] Copy Pods Resources */ = {
+		CF39C1A9A6D3C5DECA2297F1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -477,13 +520,15 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenDingTalkHelperForiOS/Pods-OpenDingTalkHelperForiOS-resources.sh",
-				"${PODS_ROOT}/BRPickerView/BRPickerView/AddressPickerView/BRPickerView.bundle",
+				"${PODS_ROOT}/BRPickerView/BRPickerView/Base/BRPickerView.bundle",
+				"${PODS_ROOT}/ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBar.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BRPickerView.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZXNavigationBar.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -502,6 +547,7 @@
 				744AAA332357601000322757 /* ODHomeVC.m in Sources */,
 				74B6863D2358B5FE00804DB9 /* ODHistoryCell.m in Sources */,
 				74B6864E23595D3F00804DB9 /* ODWeekSelectVC.m in Sources */,
+				7437ECEE244F265B003B3470 /* ODSecurityVC.m in Sources */,
 				744AAA382357633100322757 /* ODHomeCell.m in Sources */,
 				744AAA4223580B5100322757 /* ODBaseUtil.m in Sources */,
 				74B686412358B78B00804DB9 /* ODHistoryModel.m in Sources */,

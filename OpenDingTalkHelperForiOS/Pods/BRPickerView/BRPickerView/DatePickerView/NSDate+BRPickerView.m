@@ -20,8 +20,8 @@ static const NSCalendarUnit unitFlags = (NSCalendarUnitYear | NSCalendarUnitMont
 + (NSCalendar *)calendar {
     static NSCalendar *sharedCalendar = nil;
     if (!sharedCalendar) {
-        // 创建日历对象：返回当前客户端的逻辑日历(当每次修改系统日历设定，其实例化的对象也会随之改变)
-        sharedCalendar = [NSCalendar autoupdatingCurrentCalendar];
+        // 创建日历对象，指定日历的算法（公历）
+        sharedCalendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     }
     return sharedCalendar;
 }
@@ -69,20 +69,65 @@ static const NSCalendarUnit unitFlags = (NSCalendarUnitYear | NSCalendarUnitMont
     return components.weekday;
 }
 
-///// 提示：除了使用 NSDateComponents 获取年月日等信息，还可以通过格式化日期获取日期的详细的信息 //////
+#pragma mark - 获取指定日期的星期
+- (NSString *)br_weekdayString {
+    switch (self.br_weekday - 1) {
+        case 0:
+        {
+            return @"周日";
+        }
+            break;
+        case 1:
+        {
+            return @"周一";
+        }
+            break;
+        case 2:
+        {
+            return @"周二";
+        }
+            break;
+        case 3:
+        {
+            return @"周三";
+        }
+            break;
+        case 4:
+        {
+            return @"周四";
+        }
+            break;
+        case 5:
+        {
+            return @"周五";
+        }
+            break;
+        case 6:
+        {
+            return @"周六";
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    return @"";
+}
 
-#pragma mark - 创建date
+#pragma mark - 创建date（通过NSCalendar类来创建日期）
 + (NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)second {
-    NSCalendar *calendar = [NSDate calendar];
+    NSCalendar *calendar = [self calendar];
     // 初始化日期组件
-    NSDateComponents *components = [calendar components:unitFlags fromDate:[NSDate date]];
-    if (year >= 0) {
+    //NSDateComponents *components = [calendar components:unitFlags fromDate:[NSDate date]];
+    NSDateComponents *components = [[NSDateComponents alloc]init];
+    if (year > 0) {
         components.year = year;
     }
-    if (month >= 0) {
+    if (month > 0) {
         components.month = month;
     }
-    if (day >= 0) {
+    if (day > 0) {
         components.day = day;
     }
     if (hour >= 0) {
@@ -94,61 +139,90 @@ static const NSCalendarUnit unitFlags = (NSCalendarUnitYear | NSCalendarUnitMont
     if (second >= 0) {
         components.second = second;
     }
+    
     NSDate *date = [calendar dateFromComponents:components];
+    
     return date;
 }
 
 + (NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute {
-    return [self br_setYear:year month:month day:day hour:hour minute:minute second:-1];
+    return [self br_setYear:year month:month day:day hour:hour minute:minute second:0];
+}
+
++ (NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour {
+    return [self br_setYear:year month:month day:day hour:hour minute:0 second:0];
 }
 
 + (NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day {
-    return [self br_setYear:year month:month day:day hour:-1 minute:-1 second:-1];
+    return [self br_setYear:year month:month day:day hour:0 minute:0 second:0];
 }
 
 + (NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month {
-    return [self br_setYear:year month:month day:-1 hour:-1 minute:-1 second:-1];
+    return [self br_setYear:year month:month day:0 hour:0 minute:0 second:0];
 }
 
 + (NSDate *)br_setYear:(NSInteger)year {
-    return [self br_setYear:year month:-1 day:-1 hour:-1 minute:-1 second:-1];
+    return [self br_setYear:year month:0 day:0 hour:0 minute:0 second:0];
 }
 
 + (NSDate *)br_setMonth:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute {
-    return [self br_setYear:-1 month:month day:day hour:hour minute:minute second:-1];
+    return [self br_setYear:0 month:month day:day hour:hour minute:minute second:0];
 }
 
 + (NSDate *)br_setMonth:(NSInteger)month day:(NSInteger)day {
-    return [self br_setYear:-1 month:month day:day hour:-1 minute:-1 second:-1];
+    return [self br_setYear:0 month:month day:day hour:0 minute:0 second:0];
+}
+
++ (NSDate *)br_setHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)second {
+    return [self br_setYear:0 month:0 day:0 hour:hour minute:minute second:second];
 }
 
 + (NSDate *)br_setHour:(NSInteger)hour minute:(NSInteger)minute {
-    return [self br_setYear:-1 month:-1 day:-1 hour:hour minute:minute second:-1];
+    return [self br_setYear:0 month:0 day:0 hour:hour minute:minute second:0];
 }
 
-#pragma mark - 日期和字符串之间的转换：NSDate --> NSString
++ (NSDate *)br_setMinute:(NSInteger)minute second:(NSInteger)second {
+    return [self br_setYear:0 month:0 day:0 hour:0 minute:minute second:second];
+}
+
+#pragma mark - NSDate时间 和 字符串时间 之间的转换：NSDate 转 NSString
 + (NSString *)br_getDateString:(NSDate *)date format:(NSString *)format {
+    // NSDateFormatter 默认时区为系统时区
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [NSLocale currentLocale];
-    dateFormatter.timeZone = [NSTimeZone localTimeZone];
+    // 设置日期格式
     dateFormatter.dateFormat = format;
-    NSString *destDateString = [dateFormatter stringFromDate:date];
+    NSString *dateString = [dateFormatter stringFromDate:date];
     
-    return destDateString;
+    return dateString;
 }
 
-#pragma mark - 日期和字符串之间的转换：NSString --> NSDate
+#pragma mark - NSDate时间 和 字符串时间 之间的转换：NSString 转 NSDate
 + (NSDate *)br_getDate:(NSString *)dateString format:(NSString *)format {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [NSLocale currentLocale];
-    dateFormatter.timeZone = [NSTimeZone localTimeZone];
+    // 设置日期格式
     dateFormatter.dateFormat = format;
-    NSDate *destDate = [dateFormatter dateFromString:dateString];
+    // 注意：一些夏令时时间 NSString 转 NSDate 时，默认会导致 NSDateFormatter 格式化失败，返回 null
+    // 设置时区(默认不使用夏时制)
+    dateFormatter.timeZone = [self currentTimeZone];
+    // 如果当前时间不存在，就获取距离最近的整点时间
+    dateFormatter.lenient = YES;
     
-    return destDate;
+    return [dateFormatter dateFromString:dateString];
 }
 
-#pragma mark - 算法1：获取某个月的天数（通过年月求每月天数）
+#pragma mark - 获取当前时区(不使用夏时制)
++ (NSTimeZone *)currentTimeZone {
+    // 当前时区
+    NSTimeZone *currentTimeZone = [NSTimeZone localTimeZone];
+    // 当前时区相对于GMT(零时区)的偏移秒数
+    NSInteger interval = [currentTimeZone secondsFromGMTForDate:[NSDate date]];
+    // 当前时区(不使用夏时制)：由偏移量获得对应的NSTimeZone对象
+    currentTimeZone = [NSTimeZone timeZoneForSecondsFromGMT:interval];
+    
+    return currentTimeZone;
+}
+
+#pragma mark - 获取某个月的天数（通过年月求每月天数）
 + (NSUInteger)br_getDaysInYear:(NSInteger)year month:(NSInteger)month {
     BOOL isLeapYear = year % 4 == 0 ? (year % 100 == 0 ? (year % 400 == 0 ? YES : NO) : YES) : NO;
     switch (month) {
@@ -176,16 +250,6 @@ static const NSCalendarUnit unitFlags = (NSCalendarUnitYear | NSCalendarUnitMont
             break;
     }
     return 0;
-}
-
-#pragma mark - 算法2：获取某个月的天数（通过年月求每月天数）
-+ (NSUInteger)br_getDaysInYear2:(NSInteger)year month:(NSInteger)month {
-    NSDate *date = [NSDate br_getDate:[NSString stringWithFormat:@"%@-%@", @(year), @(month)] format:@"yyyy-MM"];
-    // 指定日历的算法(这里按公历)
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    // 只要给个时间给日历,就会帮你计算出来。
-    NSRange range = [calendar rangeOfUnit:NSCalendarUnitDay inUnit: NSCalendarUnitMonth forDate:date];
-    return range.length;
 }
 
 #pragma mark - 获取 日期加上/减去某天数后的新日期

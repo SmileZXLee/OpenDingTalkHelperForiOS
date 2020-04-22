@@ -7,7 +7,7 @@
 //  https://github.com/SmileZXLee/OpenDingTalkHelperForiOS
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
 typedef void (^ __nullable od_checkUserNotificationEnableBlock)(BOOL enable);
 @interface ODBaseUtil : NSObject
@@ -103,6 +103,35 @@ typedef void (^ __nullable od_checkUserNotificationEnableBlock)(BOOL enable);
  @return 周几
  */
 + (NSString *)getWeekDayFordate:(NSDate *)date;
+
+
+/**
+ 判断当前系统是否为24小时制
+
+ @return 是否为24小时制
+ */
++ (BOOL)is24HourFormat;
+
+/**
+ 获取显示在用户眼前的控制器
+
+ @return 显示在用户眼前的控制器
+ */
++ (UIViewController *)getTopVC;
+
+/**
+ 获取App名称
+ 
+ @return App名称
+ */
++ (NSString *)getAppName;
+
+/**
+ 获取当前版本号
+ 
+ @return 当前版本号
+ */
++ (NSString *)getVersion;
 @end
 
 NS_ASSUME_NONNULL_END

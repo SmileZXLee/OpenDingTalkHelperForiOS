@@ -5,4 +5,8 @@ target 'OpenDingTalkHelperForiOS' do
 	pod 'ZXDataHandle'
   pod 'ZXSlideSelectTableView'
   pod 'BRPickerView'
+  pod 'Masonry'
+  pod 'CRBoxInputView'
+  pod 'TDTouchID'
+  pod 'ZXNavigationBar'
 end

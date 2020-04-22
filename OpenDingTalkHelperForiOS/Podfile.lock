@@ -1,33 +1,61 @@
 PODS:
-  - BRPickerView (2.3.0)
+  - BRPickerView (2.5.7):
+    - BRPickerView/AddressPickerView (= 2.5.7)
+    - BRPickerView/Base (= 2.5.7)
+    - BRPickerView/DatePickerView (= 2.5.7)
+    - BRPickerView/StringPickerView (= 2.5.7)
+  - BRPickerView/AddressPickerView (2.5.7):
+    - BRPickerView/Base
+  - BRPickerView/Base (2.5.7)
+  - BRPickerView/DatePickerView (2.5.7):
+    - BRPickerView/Base
+  - BRPickerView/StringPickerView (2.5.7):
+    - BRPickerView/Base
+  - CRBoxInputView (1.1.7):
+    - Masonry
+  - Masonry (1.1.0)
+  - TDTouchID (1.0.4)
   - ZXDataHandle (1.0.7)
   - ZXEmptyView (1.0.5)
+  - ZXNavigationBar (1.0.8)
   - ZXSlideSelectTableView (1.0.4):
     - ZXTableView
   - ZXTableView (1.0.8)
 
 DEPENDENCIES:
   - BRPickerView
+  - CRBoxInputView
+  - Masonry
+  - TDTouchID
   - ZXDataHandle
   - ZXEmptyView
+  - ZXNavigationBar
   - ZXSlideSelectTableView
   - ZXTableView
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BRPickerView
+    - CRBoxInputView
+    - Masonry
+    - TDTouchID
     - ZXDataHandle
     - ZXEmptyView
+    - ZXNavigationBar
     - ZXSlideSelectTableView
     - ZXTableView
 
 SPEC CHECKSUMS:
-  BRPickerView: 61a314b55bec350650192d23d97ef1e4806cafbf
+  BRPickerView: 4cbb953f0f64722a4424cf5656ca197dd75b47fd
+  CRBoxInputView: 72b35e2f3df36739a444eadefc9ef0dbf1fe576e
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  TDTouchID: f664b3e9801df0c3787ef6fb80c08c369889cf51
   ZXDataHandle: eefdd627231452565c44bc87857ded67b46275d4
   ZXEmptyView: df7b0a484ce515923a911aa50f6f997449cdfa78
+  ZXNavigationBar: bc454216da604e45f7138ce64f565ca5b5e22bbc
   ZXSlideSelectTableView: 850bb5aae3abc02378966f51cef1d85d26c8c1f1
   ZXTableView: 0f68a3cfd9610d93bdfb84c2d3b1160255e368e2
 
-PODFILE CHECKSUM: 0321e6bbafa725cb82ceed3885d059dd5aa053fd
+PODFILE CHECKSUM: acde76cc0d11d8c95d774ed70c96aed35de54c10
 
 COCOAPODS: 1.6.1

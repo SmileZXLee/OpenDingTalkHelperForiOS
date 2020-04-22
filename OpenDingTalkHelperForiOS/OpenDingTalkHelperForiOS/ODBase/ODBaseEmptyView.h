@@ -9,7 +9,7 @@
 #import "ZXEmptyContentView.h"
 
 NS_ASSUME_NONNULL_BEGIN
-typedef enum _TTGState {
+typedef enum{
     ODEmptyViewTypeAttension = 0, //注意事项
     ODEmptyViewTypeNodata  //暂无数据
 } ODEmptyViewType;

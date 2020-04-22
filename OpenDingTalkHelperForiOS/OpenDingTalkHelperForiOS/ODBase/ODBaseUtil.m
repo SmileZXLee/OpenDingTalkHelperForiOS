@@ -317,40 +317,102 @@
     return (from + (arc4random() % (to - from + 1)));
 }
 
+#pragma mark 判断当前系统是否为24小时制
++ (BOOL)is24HourFormat{
+    NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
+    NSRange containsA =[formatStringForHours rangeOfString:@"a"];
+    return containsA.location == NSNotFound;
+}
+
+#pragma mark 获取显示在用户眼前的控制器
++ (UIViewController *)getTopVC{
+    return [self getTopVCRecursive:[self getRootVC]];
+}
+
+#pragma mark 递归获取顶部控制器
++ (UIViewController *)getTopVCRecursive:(UIViewController *)vc{
+    if(vc.presentedViewController){
+        return [self getTopVCRecursive:(UIViewController *)vc.presentedViewController];
+    }else if([vc isKindOfClass:[UITabBarController class]]){
+        return [self getTopVCRecursive:((UITabBarController *)vc).selectedViewController];
+    }else if([vc isKindOfClass:[UINavigationController class]]){
+        return [self getTopVCRecursive:((UINavigationController *)vc).visibleViewController];
+    }else{
+        
+        int count = (int)vc.childViewControllers.count;
+        for (int i = count - 1; i >= 0; i--) {
+            UIViewController *childVc = vc.childViewControllers[i];
+            if (childVc && childVc.view.window) {
+                vc = [self getTopVCRecursive:childVc];
+                break;
+            }
+        }
+        return vc;
+    }
+    
+}
+
+#pragma mark 获取keyWindow
++ (UIWindow *)getKeyWindow{
+    return [UIApplication sharedApplication].keyWindow;
+}
+
+#pragma mark 获取根控制器
++ (UIViewController *)getRootVC{
+    return [self getKeyWindow].rootViewController;
+}
+
+#pragma mark 获取info.plist
++ (NSDictionary *)getInfoDictionary{
+    return [[NSBundle mainBundle] infoDictionary];
+}
+
+#pragma mark 获取App名称
++ (NSString *)getAppName{
+    return [[self getInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+}
+
+#pragma mark 获取当前版本号
++ (NSString *)getVersion{
+    return [[self getInfoDictionary] objectForKey:@"CFBundleShortVersionString"];
+}
+
 #pragma mark - getter&setter
 - (NSString *)od_startTime{
-    return [ZXDataStoreCache readObjForKey:@"od_startTime"];
+    return [ZXDataStoreCache readObjForKey:ODStartTimeKey];
 }
 - (void)setOd_startTime:(NSString *)od_startTime{
     NSString *endTime = self.od_endTime;
     if(endTime.length){
         long disSec = [[self class]getDistanceBetweenHm:od_startTime nextHm:endTime];
         if(disSec > 0){
-            [ZXDataStoreCache saveObj:od_startTime forKey:@"od_startTime"];
+            [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKey];
         }else{
             [[self class]showToast:[NSString stringWithFormat:@"设置失败，起始时间不得大于等于结束时间"]];
         }
     }else{
-        [ZXDataStoreCache saveObj:od_startTime forKey:@"od_startTime"];
+        [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKey];
     }
     
 }
 
+
 - (NSString *)od_endTime{
-    return [ZXDataStoreCache readObjForKey:@"od_endTime"];
+    return [ZXDataStoreCache readObjForKey:ODEndTimeKey];
 }
 - (void)setOd_endTime:(NSString *)od_endTime{
     NSString *startTime = self.od_startTime;
     if(startTime.length){
         long disSec = [[self class]getDistanceBetweenHm:startTime nextHm:od_endTime];
         if(disSec > 0){
-            [ZXDataStoreCache saveObj:od_endTime forKey:@"od_endTime"];
+            [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKey];
         }else{
             [[self class]showToast:[NSString stringWithFormat:@"设置失败，结束时间不得小于等于起始时间"]];
         }
     }else{
-        [ZXDataStoreCache saveObj:od_endTime forKey:@"od_endTime"];
+        [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKey];
     }
 }
+
 
 @end

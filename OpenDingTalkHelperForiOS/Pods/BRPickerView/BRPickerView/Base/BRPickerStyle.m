@@ -3,12 +3,15 @@
 //  BRPickerViewDemo
 //
 //  Created by 任波 on 2019/10/2.
-//  Copyright © 2019年 91renb. All rights reserved.
+//  Copydone © 2019年 91renb. All dones reserved.
 //
 //  最新代码下载地址：https://github.com/91renb/BRPickerView
 
 #import "BRPickerStyle.h"
-#import "BRPickerViewMacro.h"
+#import "NSBundle+BRPickerView.h"
+
+// 标题颜色
+#define kDefaultTextColor BR_RGB_HEX(0x333333, 1.0)
 
 @implementation BRPickerStyle
 
@@ -21,18 +24,36 @@
     return _maskColor;
 }
 
-- (UIColor *)pickerColor {
-    if (!_pickerColor) {
-        _pickerColor = [UIColor whiteColor];
+- (UIColor *)alertViewColor {
+    if (!_alertViewColor) {
+        _alertViewColor = self.pickerColor;
     }
-    return _pickerColor;
+    return _alertViewColor;
+}
+
+- (UIColor *)shadowLineColor {
+    if (!_shadowLineColor) {
+        _shadowLineColor = BR_RGB_HEX(0xcccccc, 1.0f);
+    }
+    return _shadowLineColor;
 }
 
 - (UIColor *)titleBarColor {
     if (!_titleBarColor) {
-        _titleBarColor = kBRToolBarColor;
+        _titleBarColor = BR_RGB_HEX(0xfdfdfd, 1.0f);
     }
     return _titleBarColor;
+}
+
+- (CGFloat)titleBarHeight {
+    if (!self.hiddenTitleBarView) {
+        if (_titleBarHeight < 44.0f && (!self.hiddenCancelBtn || !self.hiddenDoneBtn || !self.hiddenTitleLabel)) {
+            _titleBarHeight = 44.0f;
+        }
+    } else {
+        _titleBarHeight = 0;
+    }
+    return _titleBarHeight;
 }
 
 - (UIColor *)titleLineColor {
@@ -42,25 +63,46 @@
     return _titleLineColor;
 }
 
-- (UIColor *)leftColor {
-    if (!_leftColor) {
-        _leftColor = [UIColor clearColor];
+- (UIColor *)cancelColor {
+    if (!_cancelColor) {
+        _cancelColor = [UIColor clearColor];
     }
-    return _leftColor;
+    return _cancelColor;
 }
 
-- (UIColor *)leftTextColor {
-    if (!_leftTextColor) {
-        _leftTextColor = kDefaultTextColor;
+- (UIColor *)cancelTextColor {
+    if (!_cancelTextColor) {
+        _cancelTextColor = kDefaultTextColor;
     }
-    return _leftTextColor;
+    return _cancelTextColor;
 }
 
-- (BRBorderStyle)leftBorderStyle {
-    if (!_leftBorderStyle) {
-        _leftBorderStyle = BRBorderStyleNone;
+- (UIFont *)cancelTextFont {
+    if (!_cancelTextFont) {
+        _cancelTextFont = [UIFont systemFontOfSize:16.0f];
     }
-    return _leftBorderStyle;
+    return _cancelTextFont;
+}
+
+- (NSString *)cancelBtnTitle {
+    if (!_cancelBtnTitle && !_cancelBtnImage) {
+        _cancelBtnTitle = [NSBundle br_localizedStringForKey:@"取消" language:self.language];
+    }
+    return _cancelBtnTitle;
+}
+
+- (CGRect)cancelBtnFrame {
+    if (CGRectEqualToRect(_cancelBtnFrame, CGRectZero) || _cancelBtnFrame.size.height == 0) {
+        _cancelBtnFrame = CGRectMake(5, 8, 60, 28);
+    }
+    return _cancelBtnFrame;
+}
+
+- (UIColor *)titleLabelColor {
+    if (!_titleLabelColor) {
+        _titleLabelColor = [UIColor clearColor];
+    }
+    return _titleLabelColor;
 }
 
 - (UIColor *)titleTextColor {
@@ -70,25 +112,60 @@
     return _titleTextColor;
 }
 
-- (UIColor *)rightColor {
-    if (!_rightColor) {
-        _rightColor = [UIColor clearColor];
+- (UIFont *)titleTextFont {
+    if (!_titleTextFont) {
+        _titleTextFont = [UIFont systemFontOfSize:15.0f];
     }
-    return _rightColor;
+    return _titleTextFont;
 }
 
-- (UIColor *)rightTextColor {
-    if (!_rightTextColor) {
-        _rightTextColor = kDefaultTextColor;
+- (CGRect)titleLabelFrame {
+    if (CGRectEqualToRect(_titleLabelFrame, CGRectZero) || _titleLabelFrame.size.height == 0) {
+        _titleLabelFrame = CGRectMake(5 + 60 + 2, 0, SCREEN_WIDTH - 2 * (5 + 60 + 2), 44);
     }
-    return _rightTextColor;
+    return _titleLabelFrame;
 }
 
-- (BRBorderStyle)rightBorderStyle {
-    if (!_rightBorderStyle) {
-        _rightBorderStyle = BRBorderStyleNone;
+- (UIColor *)doneColor {
+    if (!_doneColor) {
+        _doneColor = [UIColor clearColor];
     }
-    return _rightBorderStyle;
+    return _doneColor;
+}
+
+- (UIColor *)doneTextColor {
+    if (!_doneTextColor) {
+        _doneTextColor = kDefaultTextColor;
+    }
+    return _doneTextColor;
+}
+
+- (UIFont *)doneTextFont {
+    if (!_doneTextFont) {
+        _doneTextFont = [UIFont systemFontOfSize:16.0f];
+    }
+    return _doneTextFont;
+}
+
+- (NSString *)doneBtnTitle {
+    if (!_doneBtnTitle && !_doneBtnImage) {
+        _doneBtnTitle = [NSBundle br_localizedStringForKey:@"确定" language:self.language];
+    }
+    return _doneBtnTitle;
+}
+
+- (CGRect)doneBtnFrame {
+    if (CGRectEqualToRect(_doneBtnFrame, CGRectZero) || _doneBtnFrame.size.height == 0) {
+        _doneBtnFrame = CGRectMake(SCREEN_WIDTH - 60 - 5, 8, 60, 28);
+    }
+    return _doneBtnFrame;
+}
+
+- (UIColor *)pickerColor {
+    if (!_pickerColor) {
+        _pickerColor = [UIColor whiteColor];
+    }
+    return _pickerColor;
 }
 
 - (UIColor *)separatorColor {
@@ -105,27 +182,46 @@
     return _pickerTextColor;
 }
 
+- (UIFont *)pickerTextFont {
+    if (!_pickerTextFont) {
+        _pickerTextFont = [UIFont systemFontOfSize:18.0f];
+    }
+    return _pickerTextFont;
+}
+
+- (CGFloat)pickerHeight {
+    if (_pickerHeight < 40) {
+        _pickerHeight = 216.0f;
+    }
+    return _pickerHeight;
+}
+
+- (CGFloat)rowHeight {
+    if (_rowHeight < 20) {
+        _rowHeight = 35.0f;
+    }
+    return _rowHeight;
+}
+
+- (NSString *)language {
+    if (!_language) {
+        // 跟随系统的首选语言自动改变
+        _language = [NSLocale preferredLanguages].firstObject;
+    }
+    return _language;
+}
+
 #pragma mark - 快捷设置自定义样式 - 取消/确定按钮圆角样式
 + (instancetype)pickerStyleWithThemeColor:(UIColor *)themeColor {
     BRPickerStyle *customStyle = [[self alloc]init];
     if (themeColor && [themeColor isKindOfClass:[UIColor class]]) {
-        customStyle.leftTextColor = themeColor;
-        customStyle.leftBorderStyle = BRBorderStyleSolid;
-        customStyle.rightColor = themeColor;
-        customStyle.rightTextColor = [UIColor whiteColor];
-        customStyle.rightBorderStyle = BRBorderStyleFill;
+        customStyle.cancelTextColor = themeColor;
+        customStyle.cancelBorderStyle = BRBorderStyleSolid;
+        customStyle.doneColor = themeColor;
+        customStyle.doneTextColor = [UIColor whiteColor];
+        customStyle.doneBorderStyle = BRBorderStyleFill;
     }
     return customStyle;
 }
-
-#pragma mark - 快捷设置自定义样式 - 适配默认深色模式样式
-+ (instancetype)pickerStyleWithDarkModel {
-    BRPickerStyle *customStyle = [[self alloc]init];
-    // 自定义主题样式（适配深色模式）
-    
-    
-    return customStyle;
-}
-
 
 @end

@@ -24,7 +24,7 @@
         self.zx_topImageView.image = [UIImage imageNamed:@"attention_icon"];
         self.zx_titleLabel.text = @"使用须知";
         self.zx_defaultSubviewsSpace = 15;
-        self.zx_fixTop = 30;
+        self.zx_fixTop = 30 + ZXNavBarHeight;
         self.zx_detailLabel.textAlignment = NSTextAlignmentLeft;
         self.zx_detailLabel.lineBreakMode = NSLineBreakByCharWrapping;
         self.zx_detailLabel.zx_additionWidth = -10;

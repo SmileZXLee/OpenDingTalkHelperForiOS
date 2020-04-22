@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSInteger br_minute;  // 分
 @property (readonly) NSInteger br_second;  // 秒
 @property (readonly) NSInteger br_weekday; // 星期
+/** 获取中文星期字符串 */
+@property (nonatomic, readonly, copy) NSString *br_weekdayString;
 
 /** 创建 date */
 /** yyyy */
@@ -28,14 +30,22 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month;
 /** yyyy-MM-dd */
 + (nullable NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day;
+/** yyyy-MM-dd HH */
++ (nullable NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour;
 /** yyyy-MM-dd HH:mm */
 + (nullable NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute;
+/** yyyy-MM-dd HH:mm:ss */
++ (nullable NSDate *)br_setYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)second;
 /** MM-dd HH:mm */
 + (nullable NSDate *)br_setMonth:(NSInteger)month day:(NSInteger)day hour:(NSInteger)hour minute:(NSInteger)minute;
 /** MM-dd */
 + (nullable NSDate *)br_setMonth:(NSInteger)month day:(NSInteger)day;
+/** HH:mm:ss */
++ (nullable NSDate *)br_setHour:(NSInteger)hour minute:(NSInteger)minute second:(NSInteger)second;
 /** HH:mm */
 + (nullable NSDate *)br_setHour:(NSInteger)hour minute:(NSInteger)minute;
+/** mm:ss */
++ (nullable NSDate *)br_setMinute:(NSInteger)minute second:(NSInteger)second;
 
 
 /** 日期和字符串之间的转换：NSDate --> NSString */

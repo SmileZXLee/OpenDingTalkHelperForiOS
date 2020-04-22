@@ -32,8 +32,18 @@
     self.tableView.zx_setCellClassAtIndexPath = ^Class _Nonnull(NSIndexPath * _Nonnull indexPath) {
         return [ODHistoryCell class];
     };
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithTitle:@"清除" style:UIBarButtonItemStylePlain target:self action:@selector(clearAllAction)];
-    self.navigationItem.rightBarButtonItem = rightItem;
+    __weak typeof(self) weakSelf = self;
+    [self zx_setRightBtnWithText:@"清除" clickedBlock:^(ZXNavItemBtn * _Nonnull btn) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"确定清空定时打卡记录吗？" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [ODHistoryModel zx_dbDropTable];
+            [weakSelf setupData];
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:confirmAction];
+        [weakSelf presentViewController:alertController animated:YES completion:nil];
+    }];
 }
 
 #pragma mark 设置EmptyView
@@ -47,21 +57,6 @@
     NSMutableArray *historyDatas = [[ODHistoryModel zx_dbQuaryAll] mutableCopy];
     self.tableView.zxDatas = (NSMutableArray *)[[historyDatas reverseObjectEnumerator] allObjects];;
     self.navigationItem.rightBarButtonItem.enabled = self.tableView.zxDatas.count;
-}
-
-#pragma mark - Actions
-#pragma mark 清除所有历史数据
-- (void)clearAllAction{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"确定清空定时打卡记录吗？" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [ODHistoryModel zx_dbDropTable];
-        [self setupData];
-    }];
-    [alertController addAction:cancelAction];
-    [alertController addAction:confirmAction];
-    [self presentViewController:alertController animated:YES completion:nil];
-    
 }
 
 @end

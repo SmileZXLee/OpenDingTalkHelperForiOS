@@ -10,61 +10,67 @@
 #import "BRBaseView.h"
 #import "BRResultModel.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
+/// 字符串选择器类型
 typedef NS_ENUM(NSInteger, BRStringPickerMode) {
     /** 单列字符串选择 */
-    BRStringPickerComponentSingle = 1,
+    BRStringPickerComponentSingle,
     /** 多列字符串选择（两列及两列以上） */
     BRStringPickerComponentMulti
 };
 
-typedef void(^BRStringResultBlock)(id selectValue);
+typedef void(^BRStringResultModelBlock)(BRResultModel * _Nullable resultModel);
 
-typedef void(^BRStringResultModelBlock)(BRResultModel *resultModel);
-
-typedef void(^BRStringResultModelArrayBlock)(NSArray <BRResultModel *>*resultModelArr);
+typedef void(^BRStringResultModelArrayBlock)(NSArray <BRResultModel *> * _Nullable resultModelArr);
 
 @interface BRStringPickerView : BRBaseView
 
 /**
  //////////////////////////////////////////////////////////////////////////
- ///   【使用方式一】：传统的创建对象设置属性方式，好处是避免使用方式二导致方法参数过多
- ///    1. 初始化选择器（使用 initWithDataSource: 方法）
- ///    2. 设置相关属性；一些公共的属性参见基类文件 BRBaseView.h
- ///    3. 显示选择器（使用 show 方法）
+ ///
+ ///   【用法一】
+ ///    特点：灵活，扩展性强（推荐使用！）
+ ///
  ////////////////////////////////////////////////////////////////////////*/
+
+/** 字符串选择器显示类型 */
+@property (nonatomic, assign) BRStringPickerMode pickerMode;
 
 /**
  *  1.设置数据源
- *    单列：@[@"男", @"女", @"其他"]
- *    两列：@[@[@"语文", @"数学", @"英语"], @[@"优秀", @"良好", @"及格"]]
+ *    单列：@[@"男", @"女", @"其他"]，或直接传模型数组（NSArray <BRResultModel *>* dataSourceArr）
+ *    两列：@[@[@"语文", @"数学", @"英语"], @[@"优秀", @"良好", @"及格"]]，或直接传模型数组
  *    多列：... ...
  */
-@property (nonatomic, strong) NSArray *dataSourceArr;
-
+@property (nullable, nonatomic, copy) NSArray *dataSourceArr;
 /**
  *  2.设置数据源
- *    直接传plist文件名：NSString类型（如：@"sex.plist"），要带后缀名
+ *    直接传plist文件名：NSString类型（如：@"test.plist"），要带后缀名
  *    场景：可以将数据源数据（数组类型）放到plist文件中，直接传plist文件名更加简单
  */
-@property (nonatomic, strong) NSString *plistName;
+@property (nullable, nonatomic, copy) NSString *plistName;
 
-/** 单列设置默认选择的值 */
-@property (nonatomic, strong) NSString *selectValue;
+/** 设置默认选中的位置【单列】 */
+@property (nonatomic, assign) NSInteger selectIndex;
+@property (nullable, nonatomic, copy) NSString *selectValue BRPickerViewDeprecated("Use `selectIndex` instead");
 
-/** 多列设置默认选择的值 */
-@property (nonatomic, strong) NSArray <NSString *>* selectValueArr;
+/** 设置默认选中的位置【多列】 */
+@property (nullable, nonatomic, copy) NSArray <NSNumber *> *selectIndexs;
+@property (nullable, nonatomic, copy) NSArray <NSString *> *selectValues BRPickerViewDeprecated("Use `selectIndexs` instead");
 
-/** 是否自动选择，即选择完(滚动完)执行结果回调，默认为NO */
-@property (nonatomic, assign) BOOL isAutoSelect;
+/** 选择结果的回调【单列】 */
+@property (nullable, nonatomic, copy) BRStringResultModelBlock resultModelBlock;
+/** 选择结果的回调【多列】 */
+@property (nullable, nonatomic, copy) BRStringResultModelArrayBlock resultModelArrayBlock;
 
-/** 单列选择结果的回调 */
-@property (nonatomic, copy) BRStringResultModelBlock resultModelBlock;
-
-/** 多列选择结果的回调 */
-@property (nonatomic, copy) BRStringResultModelArrayBlock resultModelArrayBlock;
+/** 滚动选择时触发的回调【单列】 */
+@property (nullable, nonatomic, copy) BRStringResultModelBlock changeModelBlock;
+/** 滚动选择时触发的回调【多列】 */
+@property (nullable, nonatomic, copy) BRStringResultModelArrayBlock changeModelArrayBlock;
 
 /// 初始化字符串选择器
-/// @param pickerMode 字符串选择器类型
+/// @param pickerMode 字符串选择器显示类型
 - (instancetype)initWithPickerMode:(BRStringPickerMode)pickerMode;
 
 /// 弹出选择器视图
@@ -73,72 +79,83 @@ typedef void(^BRStringResultModelArrayBlock)(NSArray <BRResultModel *>*resultMod
 /// 关闭选择器视图
 - (void)dismiss;
 
-/// 添加选择器到指定容器视图上
-/// @param view 容器视图
-- (void)addPickerToView:(UIView *)view;
 
-/// 从指定容器视图上移除选择器
-/// @param view 容器视图
-- (void)removePickerFromView:(UIView *)view;
+
+
+//================================================= 华丽的分割线 =================================================
+
 
 
 
 /**
-//////////////////////////////////////////////////////////////////
-///   【使用方式二】：快捷使用，直接选择下面其中的一个方法进行使用
-////////////////////////////////////////////////////////////////*/
+ //////////////////////////////////////////////////////////////////////////
+ ///
+ ///   【用法二】：快捷使用，直接选择下面其中的一个方法进行使用
+ ///    特点：快捷，方便
+ ///
+ ////////////////////////////////////////////////////////////////////////*/
 
 /**
- *  1.显示自定义字符串选择器
+ *  1.显示【单列】字符串选择器
  *
- *  @param title            标题
- *  @param dataSource       数据源（1.直接传数组：NSArray类型；2.可以传plist文件名：NSString类型，带后缀名，plist文件内容要是数组格式）
- *  @param defaultSelValue  默认选中的行(单列传字符串，多列传一维数组)
- *  @param resultBlock      选择后的回调
+ *  @param title               选择器标题
+ *  @param dataSourceArr       数据源（如：@[@"男", @"女", @"其他"]，或直接传模型数组）
+ *  @param selectIndex         默认选中的位置
+ *  @param resultBlock         选择后的回调
  *
  */
-+ (void)showStringPickerWithTitle:(NSString *)title
-                       dataSource:(id)dataSource
-                  defaultSelValue:(id)defaultSelValue
-                      resultBlock:(BRStringResultBlock)resultBlock;
++ (void)showPickerWithTitle:(nullable NSString *)title
+              dataSourceArr:(nullable NSArray *)dataSourceArr
+                selectIndex:(NSInteger)selectIndex
+                resultBlock:(nullable BRStringResultModelBlock)resultBlock;
 
 /**
- *  2.显示自定义字符串选择器（支持 设置自动选择 和 自定义主题颜色）
+ *  2.显示【单列】字符串选择器
  *
- *  @param title            标题
- *  @param dataSource       数据源（1.直接传数组：NSArray类型；2.可以传plist文件名：NSString类型，带后缀名，plist文件内容要是数组格式）
- *  @param defaultSelValue  默认选中的行(单列传字符串，多列传一维数组)
- *  @param isAutoSelect     是否自动选择，即选择完(滚动完)执行结果回调，传选择的结果值
- *  @param themeColor       自定义主题颜色
- *  @param resultBlock      选择后的回调
+ *  @param title               选择器标题
+ *  @param dataSourceArr       数据源（如：@[@"男", @"女", @"其他"]，或直接传模型数组）
+ *  @param selectIndex         默认选中的位置
+ *  @param isAutoSelect        是否自动选择，即滚动选择器后就执行结果回调，默认为 NO
+ *  @param resultBlock         选择后的回调
  *
  */
-+ (void)showStringPickerWithTitle:(NSString *)title
-                       dataSource:(id)dataSource
-                  defaultSelValue:(id)defaultSelValue
-                     isAutoSelect:(BOOL)isAutoSelect
-                       themeColor:(UIColor *)themeColor
-                      resultBlock:(BRStringResultBlock)resultBlock BRPickerViewDeprecated("过期提醒：推荐【使用方式一】，支持自定义UI样式");
++ (void)showPickerWithTitle:(nullable NSString *)title
+              dataSourceArr:(nullable NSArray *)dataSourceArr
+                selectIndex:(NSInteger)selectIndex
+               isAutoSelect:(BOOL)isAutoSelect
+                resultBlock:(nullable BRStringResultModelBlock)resultBlock;
 
 /**
- *  3.显示自定义字符串选择器（支持 设置自动选择、自定义主题颜色、取消选择的回调）
+ *  3.显示【多列】字符串选择器
  *
- *  @param title            标题
- *  @param dataSource       数据源（1.直接传数组：NSArray类型；2.可以传plist文件名：NSString类型，带后缀名，plist文件内容要是数组格式）
- *  @param defaultSelValue  默认选中的行(单列传字符串，多列传一维数组)
- *  @param isAutoSelect     是否自动选择，即选择完(滚动完)执行结果回调，传选择的结果值
- *  @param themeColor       自定义主题颜色
- *  @param resultBlock      选择后的回调
- *  @param cancelBlock      取消选择的回调
+ *  @param title               选择器标题
+ *  @param dataSourceArr       数据源（如：@[@[@"语文", @"数学", @"英语"], @[@"优秀", @"良好", @"及格"]]，或直接传模型数组）
+ *  @param selectIndexs        默认选中的位置（传索引数组，如：@[@2, @1]）
+ *  @param resultBlock         选择后的回调
  *
  */
-+ (void)showStringPickerWithTitle:(NSString *)title
-                       dataSource:(id)dataSource
-                  defaultSelValue:(id)defaultSelValue
-                     isAutoSelect:(BOOL)isAutoSelect
-                       themeColor:(UIColor *)themeColor
-                      resultBlock:(BRStringResultBlock)resultBlock
-                      cancelBlock:(BRCancelBlock)cancelBlock BRPickerViewDeprecated("过期提醒：推荐【使用方式一】，支持自定义UI样式");
++ (void)showMultiPickerWithTitle:(nullable NSString *)title
+                   dataSourceArr:(nullable NSArray *)dataSourceArr
+                    selectIndexs:(nullable NSArray <NSNumber *> *)selectIndexs
+                     resultBlock:(nullable BRStringResultModelArrayBlock)resultBlock;
+
+/**
+ *  4.显示【多列】字符串选择器
+ *
+ *  @param title               选择器标题
+ *  @param dataSourceArr       数据源（如：@[@[@"语文", @"数学", @"英语"], @[@"优秀", @"良好", @"及格"]]，或直接传模型数组）
+ *  @param selectIndexs        默认选中的位置（传索引数组，如：@[@2, @1]）
+ *  @param isAutoSelect        是否自动选择，即滚动选择器后就执行结果回调，默认为 NO
+ *  @param resultBlock         选择后的回调
+ *
+ */
++ (void)showMultiPickerWithTitle:(nullable NSString *)title
+                   dataSourceArr:(nullable NSArray *)dataSourceArr
+                    selectIndexs:(nullable NSArray <NSNumber *> *)selectIndexs
+                    isAutoSelect:(BOOL)isAutoSelect
+                     resultBlock:(nullable BRStringResultModelArrayBlock)resultBlock;
 
 
 @end
+
+NS_ASSUME_NONNULL_END

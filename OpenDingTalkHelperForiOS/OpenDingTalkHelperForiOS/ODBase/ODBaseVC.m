@@ -7,7 +7,6 @@
 //  https://github.com/SmileZXLee/OpenDingTalkHelperForiOS
 
 #import "ODBaseVC.h"
-
 @interface ODBaseVC ()
 
 @end
@@ -16,9 +15,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] init];
-    backBtn.title = @"";
-    self.navigationItem.backBarButtonItem = backBtn;
 }
 
 #pragma mark - Public

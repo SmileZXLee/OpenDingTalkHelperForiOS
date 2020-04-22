@@ -30,21 +30,15 @@ blue:((CGFloat)(rgbValue & 0xFF)) / 255.0 alpha:(a)]
 #define BR_IS_PAD (UI_USER_INTERFACE_IDIOM()== UIUserInterfaceIdiomPad)
 
 // 等比例适配系数
+#ifndef kScaleFit
 #define kScaleFit (BR_IS_IPHONE ? ((SCREEN_WIDTH < SCREEN_HEIGHT) ? SCREEN_WIDTH / 375.0f : SCREEN_WIDTH / 667.0f) : 1.1f)
-
-#define kPickerHeight 216
-#define kTitleBarHeight 44
+#endif
 
 // 状态栏的高度(20 / 44(iPhoneX))
 #define BR_STATUSBAR_HEIGHT ([UIApplication sharedApplication].statusBarFrame.size.height)
 #define BR_IS_iPhoneX ((BR_STATUSBAR_HEIGHT == 44) ? YES : NO)
 // 底部安全区域远离高度
-#define BR_BOTTOM_MARGIN ((CGFloat)(BR_IS_iPhoneX ? 34 : 0))
-
-// 默认主题颜色
-#define kDefaultTextColor BR_RGB_HEX(0x333333, 1.0)
-// topView视图的背景颜色
-#define kBRToolBarColor BR_RGB_HEX(0xFDFDFD, 1.0f)
+#define BR_BOTTOM_MARGIN ((CGFloat)(BR_IS_iPhoneX ? ((SCREEN_WIDTH < SCREEN_HEIGHT) ? 34 : 21) : 0))
 
 // 静态库中编写 Category 时的便利宏，用于解决 Category 方法从静态库中加载需要特别设置的问题
 #ifndef BRSYNTH_DUMMY_CLASS
@@ -59,7 +53,11 @@ blue:((CGFloat)(rgbValue & 0xFF)) / 255.0 alpha:(a)]
 #define BRPickerViewDeprecated(instead) NS_DEPRECATED(2_0, 2_0, 2_0, 2_0, instead)
 
 // 打印错误日志
-#define BRErrorLog(...) NSLog(@"reason: %@", [NSString stringWithFormat:__VA_ARGS__])
+#ifdef DEBUG
+    #define BRErrorLog(...) NSLog(@"reason: %@", [NSString stringWithFormat:__VA_ARGS__])
+#else
+    #define BRErrorLog(...)
+#endif
 
 /**
  合成弱引用/强引用

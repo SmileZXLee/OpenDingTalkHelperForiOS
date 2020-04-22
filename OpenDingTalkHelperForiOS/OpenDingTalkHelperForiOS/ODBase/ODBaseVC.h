@@ -7,10 +7,9 @@
 //  https://github.com/SmileZXLee/OpenDingTalkHelperForiOS
 
 #import <UIKit/UIKit.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ODBaseVC : UIViewController
+@interface ODBaseVC : ZXNavigationBarController
 - (void)addGuideView;
 @end
 
