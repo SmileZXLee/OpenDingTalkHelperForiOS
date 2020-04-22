@@ -36,8 +36,9 @@
         model.selected = !model.selected;
         [weakSelf.tableView reloadData];
     };
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithTitle:@"存储" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction)];
-    self.navigationItem.rightBarButtonItem = rightItem;
+    [self zx_setRightBtnWithText:@"存储" clickedBlock:^(ZXNavItemBtn * _Nonnull btn) {
+        [weakSelf saveAction];
+    }];
     [self addGuideView];
 }
 
