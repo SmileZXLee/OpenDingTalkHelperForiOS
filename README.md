@@ -5,10 +5,13 @@
 * ToastView: UIView+Toast
 * 用户引导视图: FeatureGuideView
 * 选择器控件: [BRPickerView](https://github.com/91renb/BRPickerView)
+* 短信验证码输入框，支持密文模式: [CRBoxInputView](https://github.com/CRAnimation/CRBoxInputView)
+* 一个封装好的指纹、FaceID验证库,可以用来做iOSAPP的登录/支付等验证: [TDTouchID](https://github.com/greezi/TDTouchID)
 * 快速构建TableView: [ZXTableView](https://github.com/SmileZXLee/ZXTableView)
 * 滑动选择TableView: [ZXSlideSelectTableView](https://github.com/SmileZXLee/ZXSlideSelectTableView)
 * 空数据与网络错误视图: [ZXEmptyView](https://github.com/SmileZXLee/ZXEmptyView)
 * 数据处理与数据存储: [ZXDataHandle](https://github.com/SmileZXLee/ZXDataHandle)
+* 自定义导航栏: [ZXDataHandle](https://github.com/SmileZXLee/ZXNavigationBar)
 
 ## OpenDingTalkHelperForiOS的开发离不开[@kunlingyijia](https://github.com/kunlingyijia)的idea和建议
 ## 注意
