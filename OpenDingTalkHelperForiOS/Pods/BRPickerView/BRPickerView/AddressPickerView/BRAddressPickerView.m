@@ -2,8 +2,8 @@
 //  BRAddressPickerView.m
 //  BRPickerViewDemo
 //
-//  Created by 任波 on 2017/8/11.
-//  Copyright © 2017年 91renb. All rights reserved.
+//  Created by renbo on 2017/8/11.
+//  Copyright © 2017 irenb. All rights reserved.
 //
 //  最新代码下载地址：https://github.com/91renb/BRPickerView
 
@@ -80,9 +80,9 @@
 #pragma mark - 处理选择器数据
 - (void)handlerPickerData {
     if (self.dataSourceArr && self.dataSourceArr.count > 0) {
-        id element = [self.dataSourceArr firstObject];
+        id item = [self.dataSourceArr firstObject];
         // 如果传的值是解析好的模型数组
-        if ([element isKindOfClass:[BRProvinceModel class]]) {
+        if ([item isKindOfClass:[BRProvinceModel class]]) {
             self.provinceModelArr = self.dataSourceArr;
         } else {
             self.provinceModelArr = [self getProvinceModelArr:self.dataSourceArr];
@@ -153,6 +153,8 @@
             self.provinceIndex = (provinceIndex > 0 && provinceIndex < self.provinceModelArr.count) ? provinceIndex : 0;
             self.selectProvinceModel = self.provinceModelArr.count > self.provinceIndex ? self.provinceModelArr[self.provinceIndex] : nil;
         } else {
+            self.provinceIndex = 0;
+            self.selectProvinceModel = self.provinceModelArr.count > 0 ? self.provinceModelArr[0] : nil;
             @weakify(self)
             [self.provinceModelArr enumerateObjectsUsingBlock:^(BRProvinceModel *  _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
                 @strongify(self)
@@ -160,10 +162,6 @@
                     self.provinceIndex = idx;
                     self.selectProvinceModel = model;
                     *stop = YES;
-                }
-                if (idx == self.provinceModelArr.count - 1) {
-                    self.provinceIndex = 0;
-                    self.selectProvinceModel = self.provinceModelArr.count > 0 ? self.provinceModelArr[0] : nil;
                 }
             }];
         }
@@ -176,6 +174,8 @@
             self.cityIndex = (cityIndex > 0 && cityIndex < self.cityModelArr.count) ? cityIndex : 0;
             self.selectCityModel = self.cityModelArr.count > self.cityIndex ? self.cityModelArr[self.cityIndex] : nil;
         } else {
+            self.cityIndex = 0;
+            self.selectCityModel = self.cityModelArr.count > 0 ? self.cityModelArr[0] : nil;
             @weakify(self)
             [self.cityModelArr enumerateObjectsUsingBlock:^(BRCityModel *  _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
                 @strongify(self)
@@ -183,10 +183,6 @@
                     self.cityIndex = idx;
                     self.selectCityModel = model;
                     *stop = YES;
-                }
-                if (idx == self.cityModelArr.count - 1) {
-                    self.cityIndex = 0;
-                    self.selectCityModel = self.cityModelArr.count > 0 ? self.cityModelArr[0] : nil;
                 }
             }];
         }
@@ -199,6 +195,8 @@
             self.areaIndex = (areaIndex > 0 && areaIndex < self.areaModelArr.count) ? areaIndex : 0;
             self.selectAreaModel = self.areaModelArr.count > self.areaIndex ? self.areaModelArr[self.areaIndex] : nil;
         } else {
+            self.areaIndex = 0;
+            self.selectAreaModel = self.areaModelArr.count > 0 ? self.areaModelArr[0] : nil;
             @weakify(self)
             [self.areaModelArr enumerateObjectsUsingBlock:^(BRAreaModel *  _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
                 @strongify(self)
@@ -206,10 +204,6 @@
                     self.areaIndex = idx;
                     self.selectAreaModel = model;
                     *stop = YES;
-                }
-                if (idx == self.areaModelArr.count - 1) {
-                    self.areaIndex = 0;
-                    self.selectAreaModel = self.areaModelArr.count > 0 ? self.areaModelArr[0] : nil;
                 }
             }];
         }
@@ -239,16 +233,11 @@
 - (UIPickerView *)pickerView {
     if (!_pickerView) {
         CGFloat pickerHeaderViewHeight = self.pickerHeaderView ? self.pickerHeaderView.bounds.size.height : 0;
-        _pickerView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, self.pickerStyle.titleBarHeight + pickerHeaderViewHeight, SCREEN_WIDTH, self.pickerStyle.pickerHeight)];
-        if (self.pickerStyle.selectRowColor) {
-            _pickerView.backgroundColor = [UIColor clearColor];
-        } else {
-            _pickerView.backgroundColor = self.pickerStyle.pickerColor;
-        }
+        _pickerView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, self.pickerStyle.titleBarHeight + pickerHeaderViewHeight, self.keyView.bounds.size.width, self.pickerStyle.pickerHeight)];
+        _pickerView.backgroundColor = self.pickerStyle.pickerColor;
         _pickerView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
         _pickerView.dataSource = self;
         _pickerView.delegate = self;
-        _pickerView.showsSelectionIndicator = YES;
     }
     return _pickerView;
 }
@@ -292,14 +281,7 @@
 #pragma mark - UIPickerViewDelegate
 // 3.设置 pickerView 的显示内容
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view {
-    
-    // 设置分割线的颜色
-    for (UIView *subView in pickerView.subviews) {
-        if (subView && [subView isKindOfClass:[UIView class]] && subView.frame.size.height <= 1) {
-            subView.backgroundColor = self.pickerStyle.separatorColor;
-        }
-    }
-    
+    // 1.自定义 row 的内容视图
     UILabel *label = (UILabel *)view;
     if (!label) {
         label = [[UILabel alloc]init];
@@ -322,6 +304,9 @@
         BRAreaModel *model = self.areaModelArr[row];
         label.text = model.name;
     }
+    
+    // 2.设置选择器中间选中行的样式
+    [self.pickerStyle setupPickerSelectRowStyle:pickerView titleForRow:row forComponent:component];
     
     return label;
 }
@@ -448,6 +433,11 @@
         [self addSubview:self.pickerView];
     } else {
         [self.alertView addSubview:self.pickerView];
+    }
+    
+    // ③添加中间选择行的两条分割线
+    if (self.pickerStyle.clearPickerNewStyle) {
+        [self.pickerStyle addSeparatorLineView:self.pickerView];
     }
     
     // 2.绑定数据

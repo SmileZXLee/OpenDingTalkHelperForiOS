@@ -41,6 +41,7 @@ static CGFloat oldBrightness = -1;
     self.tableView.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationAuthored) name:ODNotificationAuthoredKey object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveNotification) name:ODReceiveNotificationKey object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
     
@@ -224,7 +225,7 @@ static CGFloat oldBrightness = -1;
 
 #pragma mark 设置EmptyView
 - (void)setupEmptyView{
-    [self.view zx_setEmptyView:@"ODBaseEmptyView" isFull:YES clickedTarget:self selector:@selector(openDingTalkAndAskForNotification)];
+    [self.view zx_setEmptyView:@"ODBaseEmptyView" isFull:YES clickedTarget:self selector:@selector(askForNotification)];
     self.view.zx_emptyContentView.zx_type = ODEmptyViewTypeAttension;
     [self.view.zx_emptyContentView zx_show];
 }
@@ -245,14 +246,34 @@ static CGFloat oldBrightness = -1;
     [ODBaseUtil askForUserNotification];
 }
 
+#pragma mark 请求通知权限
+- (void)askForNotification{
+    [ODBaseUtil askForUserNotification];
+}
+
+#pragma mark 请求第一次打开钉钉
+- (void)doFirstOpenDingTalk{
+    if((!self.view.zx_emptyContentView || self.view.zx_emptyContentView.hidden) && ![ODBaseUtil shareInstance].isOpenedDingTalk){
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请允许首次打开钉钉" message:@"为了避免打开钉钉失败，请允许此应用打开钉钉，点击【下一步】后若系统提示是否允许“钉钉打卡助手”打开“钉钉”，请点击允许，若直接跳转钉钉也是正常的。" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"下一步" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self openDingTalk];
+        }];
+        [alertController addAction:confirmAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+
 #pragma mark 应用进入前台
 - (void)appWillEnterForeground{
     [self updateStatusModel];
     [self updateTimeCurrentModel];
+    [self doFirstOpenDingTalk];
 }
 
 #pragma mark 打开钉钉
 - (BOOL)openDingTalk{
+    [ODBaseUtil shareInstance].isOpenedDingTalk = YES;
     NSString *schemeUrlStr = ODDingTalkScheme;
     NSURL *schemeUrl = [NSURL URLWithString:schemeUrlStr];
     if([[UIApplication sharedApplication]canOpenURL:schemeUrl]){
@@ -393,6 +414,14 @@ static CGFloat oldBrightness = -1;
         };
         [self presentViewController:VC animated:YES completion:nil];
     }
+}
+
+#pragma mark 已被授予通知权限
+- (void)notificationAuthored{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self doFirstOpenDingTalk];
+    });
+    
 }
 
 #pragma mark 接收到本地推送

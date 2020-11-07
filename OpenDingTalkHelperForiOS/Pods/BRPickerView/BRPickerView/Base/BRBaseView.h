@@ -2,8 +2,8 @@
 //  BaseView.h
 //  BRPickerViewDemo
 //
-//  Created by 任波 on 2017/8/11.
-//  Copyright © 2017年 91renb. All rights reserved.
+//  Created by renbo on 2017/8/11.
+//  Copyright © 2017 irenb. All rights reserved.
 //
 //  最新代码下载地址：https://github.com/91renb/BRPickerView
 
@@ -35,11 +35,14 @@ typedef void(^BRResultBlock)(void);
 /** accessory view below picker view. default is nil */
 @property (nullable, nonatomic, strong) UIView *pickerFooterView;
 
-/** 选择结果的回调（框架内部使用） */
+/** 选择结果的回调（组件内部使用）*/
 @property (nullable, nonatomic, copy) BRResultBlock doneBlock;
 
-/** 弹框视图 */
+/** 弹框视图(使用场景：可以在 alertView 上添加选择器的自定义背景视图) */
 @property (nullable, nonatomic, strong) UIView *alertView;
+
+/** 组件的父视图：可以传 自己获取的 keyWindow，或页面的 view */
+@property (nullable, nonatomic, strong) UIView *keyView;
 
 
 /// 刷新选择器数据
@@ -49,7 +52,7 @@ typedef void(^BRResultBlock)(void);
 /// 扩展一：添加选择器到指定容器视图上
 /// 应用场景：可将中间的滚轮选择器 pickerView 视图（不包含蒙层及标题栏）添加到任何自定义视图上（会自动填满容器视图），也方便自定义更多的弹框样式
 /// @param view 容器视图
-- (void)addPickerToView:(nullable UIView *)view;
+- (void)addPickerToView:(nullable UIView *)view NS_REQUIRES_SUPER;
 
 /// 从指定容器视图上移除选择器
 /// @param view 容器视图

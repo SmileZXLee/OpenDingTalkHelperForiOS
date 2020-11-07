@@ -28,8 +28,8 @@
         self.zx_detailLabel.textAlignment = NSTextAlignmentLeft;
         self.zx_detailLabel.lineBreakMode = NSLineBreakByCharWrapping;
         self.zx_detailLabel.zx_additionWidth = -10;
-        self.zx_detailLabel.text = @"1.此工具仅用于自动打开钉钉进行签到，钉钉需打开自动签到功能且设备处于打卡范围内！\n2.点击【跳转测试】按钮之后若出现一弹窗提示是否允许打开钉钉，请务必点击允许，仅需允许一次即可。\n3.进入主页后请设置自动打卡的起始时间和结束时间，此应用将会随机选择范围内的时间进行跳转打卡。\n4.请允许通知权限。";
-        [self.zx_actionBtn setTitle:@"跳转测试&申请通知权限" forState:UIControlStateNormal];
+        self.zx_detailLabel.text = @"1.此工具仅用于自动打开钉钉进行签到，钉钉需打开自动签到功能且设备处于打卡范围内！\n2.在此App中第一次打开钉钉时若弹窗提示是否允许打开钉钉，请务必点击允许，仅需允许一次即可。\n3.进入主页后请设置自动打卡的起始时间和结束时间，此应用将会随机选择范围内的时间进行跳转打卡。\n4.请允许通知权限。";
+        [self.zx_actionBtn setTitle:@"申请通知权限" forState:UIControlStateNormal];
         [self.zx_actionBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         __weak typeof(self) weakSelf = self;
         self.zx_actionBtn.zx_handleFrame = ^CGRect(CGRect orgFrame) {

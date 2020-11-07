@@ -21,6 +21,12 @@ typedef void (^ __nullable od_checkUserNotificationEnableBlock)(BOOL enable);
  结束时间
  */
 @property (copy, nonatomic)NSString *od_endTime;
+
+/**
+ 是否已经第一次打开过钉钉
+ */
+@property (assign, nonatomic)BOOL isOpenedDingTalk;
+
 + (instancetype)shareInstance;
 
 /**

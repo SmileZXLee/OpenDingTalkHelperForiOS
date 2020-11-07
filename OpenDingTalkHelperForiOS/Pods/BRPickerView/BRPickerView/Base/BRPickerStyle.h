@@ -2,8 +2,8 @@
 //  BRPickerStyle.h
 //  BRPickerViewDemo
 //
-//  Created by 任波 on 2019/10/2.
-//  Copyright © 2019年 91renb. All rights reserved.
+//  Created by renbo on 2019/10/2.
+//  Copyright © 2019 irenb. All rights reserved.
 //
 //  最新代码下载地址：https://github.com/91renb/BRPickerView
 
@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 /////////////////////////////// 蒙层视图（maskView）///////////////////////////////
 
-/** 设置背景颜色（backgroundColor）*/
+/** 设置背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *maskColor;
 
 /** 隐藏 maskView，默认为 NO */
@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 ////////////////////////////// 弹框视图（alertView）///////////////////////////////
 
-/** 设置 alertView 弹框视图的背景颜色（backgroundColor）*/
+/** 设置 alertView 弹框视图的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *alertViewColor;
 
 /** 设置 alertView 弹框视图左上和右上的圆角半径  */
@@ -52,13 +52,16 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 /** 隐藏 alertView 弹框视图顶部边框线，默认为 NO */
 @property (nonatomic, assign) BOOL hiddenShadowLine;
 
+/** 设置 alertView 弹框视图底部内边距，默认为安全区域底部距屏幕底部的高度  */
+@property (nonatomic, assign) CGFloat paddingBottom;
+
 
 //////////////////////////// 标题栏视图（titleBarView） ////////////////////////////
 
-/** 设置 titleBarView 标题栏的背景颜色（backgroundColor）*/
+/** 设置 titleBarView 标题栏的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *titleBarColor;
 
-/** 设置 titleBarView 标题栏的高度（height）*/
+/** 设置 titleBarView 标题栏的高度 */
 @property (nonatomic, assign) CGFloat titleBarHeight;
 
 /** 设置 titleBarView 标题栏底部分割线颜色 */
@@ -73,13 +76,13 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 ////////////////////////// 标题栏中间label（titleLabel）///////////////////////////
 
-/** 设置 titleLabel 的背景颜色（backgroundColor）*/
+/** 设置 titleLabel 的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *titleLabelColor;
 
-/** 设置 titleLabel 文本颜色（textColor）*/
+/** 设置 titleLabel 文本颜色 */
 @property (nullable, nonatomic, strong) UIColor *titleTextColor;
 
-/** 设置 titleLabel 字体大小（font）*/
+/** 设置 titleLabel 字体大小 */
 @property (nullable, nonatomic, strong) UIFont *titleTextFont;
 
 /** 设置 titleLabel 的 frame */
@@ -91,20 +94,26 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 /////////////////////////////// 取消按钮（cancelBtn）//////////////////////////////
 
-/** 设置 cancelBtn 的背景颜色（backgroundColor）*/
+/** 设置 cancelBtn 的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *cancelColor;
 
-/** 设置 cancelBtn 标题的颜色（titleColor）*/
+/** 设置 cancelBtn 标题的颜色 */
 @property (nullable, nonatomic, strong) UIColor *cancelTextColor;
 
-/** 设置 cancelBtn 标题的字体（font）*/
+/** 设置 cancelBtn 标题的字体 */
 @property (nullable, nonatomic, strong) UIFont *cancelTextFont;
-
-/** 设置 cancelBtn 的边框样式（borderStyle）*/
-@property (nonatomic, assign) BRBorderStyle cancelBorderStyle;
 
 /** 设置 cancelBtn 的 frame */
 @property (nonatomic, assign) CGRect cancelBtnFrame;
+
+/** 设置 cancelBtn 的边框样式 */
+@property (nonatomic, assign) BRBorderStyle cancelBorderStyle;
+
+/** 设置 cancelBtn 的圆角大小 */
+@property (nonatomic, assign) CGFloat cancelCornerRadius;
+
+/** 设置 cancelBtn 的边框宽度 */
+@property (nonatomic, assign) CGFloat cancelBorderWidth;
 
 /** 设置 cancelBtn 的 image */
 @property (nullable, nonatomic, strong) UIImage *cancelBtnImage;
@@ -118,20 +127,26 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 /////////////////////////////// 确定按钮（doneBtn）////////////////////////////////
 
-/** 设置 doneBtn 的背景颜色（backgroundColor）*/
+/** 设置 doneBtn 的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *doneColor;
 
-/** 设置 doneBtn 标题的颜色（titleColor）*/
+/** 设置 doneBtn 标题的颜色 */
 @property (nullable, nonatomic, strong) UIColor *doneTextColor;
 
-/** 设置 doneBtn 标题的字体（font）*/
+/** 设置 doneBtn 标题的字体 */
 @property (nullable, nonatomic, strong) UIFont *doneTextFont;
-
-/** 设置 doneBtn 的边框样式（borderStyle）*/
-@property (nonatomic, assign) BRBorderStyle doneBorderStyle;
 
 /** 设置 doneBtn 的 frame */
 @property (nonatomic, assign) CGRect doneBtnFrame;
+
+/** 设置 doneBtn 的边框样式 */
+@property (nonatomic, assign) BRBorderStyle doneBorderStyle;
+
+/** 设置 doneBtn 的圆角大小 */
+@property (nonatomic, assign) CGFloat doneCornerRadius;
+
+/** 设置 doneBtn 的边框宽度 */
+@property (nonatomic, assign) CGFloat doneBorderWidth;
 
 /** 设置 doneBtn 的 image */
 @property (nullable, nonatomic, strong) UIImage *doneBtnImage;
@@ -145,29 +160,35 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 
 /////////////////////////////// 选择器（pickerView）///////////////////////////////
 
-/** 设置 picker 的背景颜色（backgroundColor）*/
+/** 设置 picker 的背景颜色 */
 @property (nullable, nonatomic, strong) UIColor *pickerColor;
 
-/** 设置 picker 中间两条分割线的背景颜色（separatorColor）*/
+/** 设置 picker 中间两条分割线的背景颜色。暂不支持日期选择器前4种类型 */
 @property (nullable, nonatomic, strong) UIColor *separatorColor;
 
-/**
- *  设置 picker 选中行的背景颜色，默认为nil
- *  提示：当有设置选中行的背景颜色时，pickerColor默认会等于clearColor，此时可通过设置 pickerView 父视图的背景颜色 来设置选择器的背景颜色
- */
-@property (nullable, nonatomic, strong) UIColor *selectRowColor;
-
-/** 设置 picker 文本的颜色（textColor）*/
+/** 设置 picker 文本的颜色。暂不支持日期选择器前4种类型 */
 @property (nullable, nonatomic, strong) UIColor *pickerTextColor;
 
-/** 设置 picker 文本的字体（font）*/
+/** 设置 picker 文本的字体。暂不支持日期选择器前4种类型 */
 @property (nullable, nonatomic, strong) UIFont *pickerTextFont;
 
-/** 设置 picker 的高度（height），系统默认高度为 216 */
+/** 设置 picker 中间选中行的背景颜色。暂不支持日期选择器前4种类型 */
+@property (nullable, nonatomic, strong) UIColor *selectRowColor;
+
+/** 设置 picker 中间选中行文本的颜色。暂不支持日期选择器前4种类型 */
+@property (nullable, nonatomic, strong) UIColor *selectRowTextColor;
+
+/** 设置 picker 中间选中行文本的字体。暂不支持日期选择器前4种类型 */
+@property (nullable, nonatomic, strong) UIFont *selectRowTextFont;
+
+/** 设置 picker 的高度，系统默认高度为 216 */
 @property (nonatomic, assign) CGFloat pickerHeight;
 
-/** 设置 picker 的行高（rowHeight）*/
+/** 设置 picker 的行高。暂不支持日期选择器前4种类型 */
 @property (nonatomic, assign) CGFloat rowHeight;
+
+/** 清除iOS14之后选择器默认自带的新样式（主要是：①隐藏中间选择行的背景样式，②清除默认的内边距，③新增中间选择行的两条分割线；与iOS14之前的样式保持一致），默认为 YES */
+@property (nonatomic, assign) BOOL clearPickerNewStyle;
 
 
 /**
@@ -177,18 +198,18 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 @property(nullable, nonatomic, copy) NSString *language;
 
 
-/////// 日期选择器单位样式（showUnitType == BRShowUnitTypeOnlyCenter 时，生效）///////
+/////// 日期选择器单位样式（showUnitType == BRShowUnitTypeOnlyCenter 时生效。暂不支持日期选择器前4种类型 ）///////
 
-/** 设置日期选择器单位文本的颜色（textColor）*/
+/** 设置日期选择器单位文本的颜色 */
 @property (nullable, nonatomic, strong) UIColor *dateUnitTextColor;
 
-/** 设置日期选择器单位文本的字体（font）*/
+/** 设置日期选择器单位文本的字体 */
 @property (nullable, nonatomic, strong) UIFont *dateUnitTextFont;
 
-/** 设置日期选择器单位 label 的水平方向偏移量（offsetX）*/
+/** 设置日期选择器单位 label 的水平方向偏移量 */
 @property (nonatomic, assign) CGFloat dateUnitOffsetX;
 
-/** 设置日期选择器单位 label 的竖直方向偏移量（offsetY）*/
+/** 设置日期选择器单位 label 的竖直方向偏移量 */
 @property (nonatomic, assign) CGFloat dateUnitOffsetY;
 
 
@@ -206,6 +227,12 @@ typedef NS_ENUM(NSInteger, BRBorderStyle) {
 /// @param doneBtnImage 完成按钮的 image
 + (instancetype)pickerStyleWithDoneBtnImage:(nullable UIImage *)doneBtnImage;
 
+
+/** 设置选择器中间选中行的样式（组件内部使用）*/
+- (void)setupPickerSelectRowStyle:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
+
+/** 添加选择器中间行上下两条分割线（iOS14之后系统默认去掉，需要手动添加；组件内部使用）*/
+- (void)addSeparatorLineView:(UIView *)pickerView;
 
 @end
 

@@ -2,8 +2,8 @@
 //  BRPickerStyle.m
 //  BRPickerViewDemo
 //
-//  Created by 任波 on 2019/10/2.
-//  Copydone © 2019年 91renb. All dones reserved.
+//  Created by renbo on 2019/10/2.
+//  Copyright © 2019 irenb. All dones reserved.
 //
 //  最新代码下载地址：https://github.com/91renb/BRPickerView
 
@@ -11,9 +11,16 @@
 #import "NSBundle+BRPickerView.h"
 
 // 标题颜色
-#define kDefaultTextColor BR_RGB_HEX(0x333333, 1.0)
+#define kBRDefaultTextColor BR_RGB_HEX(0x333333, 1.0f)
 
 @implementation BRPickerStyle
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.clearPickerNewStyle = YES;
+    }
+    return self;
+}
 
 /// 设置默认样式
 
@@ -24,23 +31,40 @@
     return _maskColor;
 }
 
-- (UIColor *)alertViewColor {
-    if (!_alertViewColor) {
-        _alertViewColor = self.pickerColor;
-    }
-    return _alertViewColor;
-}
-
 - (UIColor *)shadowLineColor {
     if (!_shadowLineColor) {
-        _shadowLineColor = BR_RGB_HEX(0xcccccc, 1.0f);
+        if (@available(iOS 13.0, *)) {
+            // 边框线颜色，有透明度
+            _shadowLineColor = [UIColor separatorColor];
+        } else {
+            _shadowLineColor = BR_RGB_HEX(0xc6c6c8, 1.0f);
+        }
     }
     return _shadowLineColor;
 }
 
+- (CGFloat)shadowLineHeight {
+    if (_shadowLineHeight <= 0 || _shadowLineHeight > 5.0f) {
+        _shadowLineHeight = 0.5f;
+    }
+    return _shadowLineHeight;
+}
+
+- (CGFloat)paddingBottom {
+    if (_paddingBottom <= 0) {
+        _paddingBottom = BR_BOTTOM_MARGIN;
+    }
+    return _paddingBottom;
+}
+
 - (UIColor *)titleBarColor {
     if (!_titleBarColor) {
-        _titleBarColor = BR_RGB_HEX(0xfdfdfd, 1.0f);
+        if (@available(iOS 13.0, *)) {
+            // #ffffff(正常)、#1c1c1e(深色)
+            _titleBarColor = [UIColor secondarySystemGroupedBackgroundColor];
+        } else {
+            _titleBarColor = [UIColor whiteColor];
+        }
     }
     return _titleBarColor;
 }
@@ -58,7 +82,7 @@
 
 - (UIColor *)titleLineColor {
     if (!_titleLineColor) {
-        _titleLineColor = BR_RGB_HEX(0xf1f1f1, 1.0f);
+        _titleLineColor = [self br_colorWithLightColor:BR_RGB_HEX(0xededee, 1.0f) darkColor:BR_RGB_HEX(0x18181c, 1.0f)];
     }
     return _titleLineColor;
 }
@@ -72,7 +96,11 @@
 
 - (UIColor *)cancelTextColor {
     if (!_cancelTextColor) {
-        _cancelTextColor = kDefaultTextColor;
+        if (@available(iOS 13.0, *)) {
+            _cancelTextColor = [UIColor labelColor];
+        } else {
+            _cancelTextColor = kBRDefaultTextColor;
+        }
     }
     return _cancelTextColor;
 }
@@ -107,7 +135,11 @@
 
 - (UIColor *)titleTextColor {
     if (!_titleTextColor) {
-        _titleTextColor = [kDefaultTextColor colorWithAlphaComponent:0.8f];
+        if (@available(iOS 13.0, *)) {
+            _titleTextColor = [UIColor secondaryLabelColor];
+        } else {
+            _titleTextColor = BR_RGB_HEX(0x999999, 1.0f);
+        }
     }
     return _titleTextColor;
 }
@@ -121,7 +153,7 @@
 
 - (CGRect)titleLabelFrame {
     if (CGRectEqualToRect(_titleLabelFrame, CGRectZero) || _titleLabelFrame.size.height == 0) {
-        _titleLabelFrame = CGRectMake(5 + 60 + 2, 0, SCREEN_WIDTH - 2 * (5 + 60 + 2), 44);
+        _titleLabelFrame = CGRectMake(5 + 60 + 2, 0, BRGetKeyWindow().bounds.size.width - 2 * (5 + 60 + 2), 44);
     }
     return _titleLabelFrame;
 }
@@ -135,7 +167,11 @@
 
 - (UIColor *)doneTextColor {
     if (!_doneTextColor) {
-        _doneTextColor = kDefaultTextColor;
+        if (@available(iOS 13.0, *)) {
+            _doneTextColor = [UIColor labelColor];
+        } else {
+            _doneTextColor = kBRDefaultTextColor;
+        }
     }
     return _doneTextColor;
 }
@@ -156,28 +192,42 @@
 
 - (CGRect)doneBtnFrame {
     if (CGRectEqualToRect(_doneBtnFrame, CGRectZero) || _doneBtnFrame.size.height == 0) {
-        _doneBtnFrame = CGRectMake(SCREEN_WIDTH - 60 - 5, 8, 60, 28);
+        _doneBtnFrame = CGRectMake(BRGetKeyWindow().bounds.size.width - 60 - 5, 8, 60, 28);
     }
     return _doneBtnFrame;
 }
 
 - (UIColor *)pickerColor {
     if (!_pickerColor) {
-        _pickerColor = [UIColor whiteColor];
+        if (@available(iOS 13.0, *)) {
+            // #ffffff(正常)、#1c1c1e(深色)
+            _pickerColor = [UIColor secondarySystemGroupedBackgroundColor];
+        } else {
+            _pickerColor = [UIColor whiteColor];
+        }
     }
     return _pickerColor;
 }
 
 - (UIColor *)separatorColor {
     if (!_separatorColor) {
-        _separatorColor = [UIColor colorWithRed:195/255.0 green:195/255.0 blue:195/255.0 alpha:1.0];
+        if (@available(iOS 13.0, *)) {
+            // 分割线颜色，无透明度
+            _separatorColor = [UIColor opaqueSeparatorColor];
+        } else {
+            _separatorColor = BR_RGB_HEX(0xc6c6c8, 1.0f);
+        }
     }
     return _separatorColor;
 }
 
 - (UIColor *)pickerTextColor {
     if (!_pickerTextColor) {
-        _pickerTextColor = kDefaultTextColor;
+        if (@available(iOS 13.0, *)) {
+            _pickerTextColor = [UIColor labelColor];
+        } else {
+            _pickerTextColor = kBRDefaultTextColor;
+        }
     }
     return _pickerTextColor;
 }
@@ -206,15 +256,51 @@
 - (NSString *)language {
     if (!_language) {
         // 跟随系统的首选语言自动改变
+        // zh-Hans-CN(简体中文)、zh-Hant-CN(繁体中文)、en-CN(美式英语)、en-GB(英式英语)
+        // 其中`CN`是iOS9以后新增的地区代码，如：CN 代表中国，US 代表美国
         _language = [NSLocale preferredLanguages].firstObject;
     }
     return _language;
 }
 
-#pragma mark - 快捷设置自定义样式 - 取消/确定按钮圆角样式
+- (UIColor *)dateUnitTextColor {
+    if (!_dateUnitTextColor) {
+        if (@available(iOS 13.0, *)) {
+            _dateUnitTextColor = [UIColor labelColor];
+        } else {
+            _dateUnitTextColor = kBRDefaultTextColor;
+        }
+    }
+    return _dateUnitTextColor;
+}
+
+- (UIFont *)dateUnitTextFont {
+    if (!_dateUnitTextFont) {
+        _dateUnitTextFont = [UIFont systemFontOfSize:18.0f];
+    }
+    return _dateUnitTextFont;
+}
+
+#pragma mark - 创建自定义动态颜色（适配深色模式）
+- (UIColor *)br_colorWithLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
+    if (@available(iOS 13.0, *)) {
+        UIColor *dyColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+            if ([traitCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return lightColor;
+            } else {
+                return darkColor;
+            }
+        }];
+        return dyColor;
+    } else {
+        return lightColor;
+    }
+}
+
+#pragma mark - 弹框模板样式1 - 取消/确定按钮圆角样式
 + (instancetype)pickerStyleWithThemeColor:(UIColor *)themeColor {
     BRPickerStyle *customStyle = [[self alloc]init];
-    if (themeColor && [themeColor isKindOfClass:[UIColor class]]) {
+    if (themeColor) {
         customStyle.cancelTextColor = themeColor;
         customStyle.cancelBorderStyle = BRBorderStyleSolid;
         customStyle.doneColor = themeColor;
@@ -222,6 +308,158 @@
         customStyle.doneBorderStyle = BRBorderStyleFill;
     }
     return customStyle;
+}
+
+#pragma mark - 弹框模板样式2 - 顶部圆角样式 + 完成按钮
++ (instancetype)pickerStyleWithDoneTextColor:(UIColor *)doneTextColor {
+    BRPickerStyle *customStyle = [[self alloc]init];
+    if (doneTextColor) {
+        customStyle.topCornerRadius = 16.0f;
+        customStyle.hiddenCancelBtn = YES;
+        customStyle.hiddenTitleLine = YES;
+        customStyle.titleLabelFrame = CGRectMake(20, 4, 100, 40);
+        customStyle.doneTextColor = doneTextColor;
+        customStyle.doneTextFont = [UIFont boldSystemFontOfSize:18.0f];
+        customStyle.doneBtnFrame = CGRectMake(BRGetKeyWindow().bounds.size.width - 60, 4, 60, 40);
+        customStyle.doneBtnTitle = [NSBundle br_localizedStringForKey:@"完成" language:customStyle.language];
+        customStyle.selectRowTextColor = doneTextColor;
+        customStyle.selectRowTextFont = [UIFont boldSystemFontOfSize:20.0f];
+    }
+    return customStyle;
+}
+
+#pragma mark - 弹框模板样式3 - 顶部圆角样式 + 图标按钮
++ (instancetype)pickerStyleWithDoneBtnImage:(UIImage *)doneBtnImage {
+    BRPickerStyle *customStyle = [[self alloc]init];
+    if (doneBtnImage) {
+        customStyle.topCornerRadius = 16.0f;
+        customStyle.hiddenTitleLine = YES;
+        customStyle.hiddenCancelBtn = YES;
+        customStyle.titleLabelFrame = CGRectMake(20, 4, 100, 40);
+        customStyle.doneBtnImage = doneBtnImage;
+        customStyle.doneBtnFrame = CGRectMake(BRGetKeyWindow().bounds.size.width - 44, 4, 40, 40);
+    }
+    return customStyle;
+}
+
+
+#pragma mark - 设置选择器中间选中行的样式
+- (void)setupPickerSelectRowStyle:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    // 1.设置分割线的颜色
+    NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+    if (systemVersion.doubleValue < 14.0) {
+        for (UIView *subView in pickerView.subviews) {
+            if (subView && [subView isKindOfClass:[UIView class]] && subView.frame.size.height <= 1) {
+                subView.backgroundColor = self.separatorColor;
+            }
+        }
+    }
+    
+    // 2.设置选择器中间选中行的背景颜色
+    UIView *contentView = nil;
+    NSArray *subviews = pickerView.subviews;
+    if (subviews.count > 0) {
+        id firstView = subviews.firstObject;
+        if (firstView && [firstView isKindOfClass:[UIView class]]) {
+            contentView = (UIView *)firstView;
+        }
+    }
+    if (self.selectRowColor) {
+        UIView *columnView = nil;
+        if (contentView) {
+            id obj = [contentView valueForKey:@"subviewCache"];
+            if (obj && [obj isKindOfClass:[NSArray class]]) {
+                NSArray *columnViews = (NSArray *)obj;
+                if (columnViews.count > 0) {
+                    id columnObj = columnViews.firstObject;
+                    if (columnObj && [columnObj isKindOfClass:[UIView class]]) {
+                        columnView = (UIView *)columnObj;
+                    }
+                }
+            }
+        }
+        if (columnView) {
+            id obj = [columnView valueForKey:@"middleContainerView"];
+            if (obj && [obj isKindOfClass:[UIView class]]) {
+                UIView *selectRowView = (UIView *)obj;
+                // 中间选中行的背景颜色
+                selectRowView.backgroundColor = self.selectRowColor;
+            }
+        }
+    }
+    
+    if (contentView && self.clearPickerNewStyle) {
+        if (systemVersion.doubleValue >= 14.0) {
+            // ①隐藏中间选择行的背景样式
+            id lastView = subviews.lastObject;
+            if (lastView && [lastView isKindOfClass:[UIView class]]) {
+                UIView *rectBgView = (UIView *)lastView;
+                rectBgView.backgroundColor = [UIColor clearColor];
+            }
+            
+            // ②清除iOS14上选择器默认的内边距
+            [self setPickerAllSubViewsStyle:contentView];
+        }
+    }
+    
+    // 3.设置选择器中间选中行的字体颜色/字体大小
+    if (self.selectRowTextColor || self.selectRowTextFont) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 当前选中的 label
+            UILabel *selectLabel = (UILabel *)[pickerView viewForRow:row forComponent:component];
+            if (selectLabel) {
+                if (self.selectRowTextColor) {
+                    selectLabel.textColor = self.selectRowTextColor;
+                }
+                if (self.selectRowTextFont) {
+                    selectLabel.font = self.selectRowTextFont;
+                }
+            }
+        });
+    }
+}
+
+// 遍历子视图，重新设置 frame（清空在 iOS14 上 UIPickerView 出现的内边距）
+- (void)setPickerAllSubViewsStyle:(UIView *)view {
+    NSArray *subViews = view.subviews;
+    if (subViews.count == 0 || [view isKindOfClass:[UILabel class]]) return;
+    for (UIView *subView in subViews) {
+        NSString *className = NSStringFromClass([subView class]);
+        if ([className isEqualToString:@"UIPickerColumnView"]) {
+            CGRect rect = subView.frame;
+            rect.origin.x = 0;
+            rect.size.width = view.bounds.size.width;
+            subView.frame = rect;
+        }
+        NSString *superClassName = NSStringFromClass([view class]);
+        if ([superClassName isEqualToString:@"UIPickerColumnView"]) {
+            CGRect rect = subView.frame;
+            rect.size.width = view.bounds.size.width;
+            subView.frame = rect;
+        }
+        if ([subView isKindOfClass:[UILabel class]]) {
+            CGRect rect = subView.frame;
+            rect.origin.x = 10;
+            subView.frame = rect;
+        }
+        
+        [self setPickerAllSubViewsStyle:subView];
+    }
+}
+
+#pragma mark - 添加选择器中间行上下两条分割线（iOS14之后系统默认去掉，需要手动添加）
+- (void)addSeparatorLineView:(UIView *)pickerView {
+    if ([UIDevice currentDevice].systemVersion.doubleValue >= 14.0) {
+        UIView *topLineView = [[UIView alloc]initWithFrame:CGRectMake(0, pickerView.bounds.size.height / 2 - self.rowHeight / 2, pickerView.bounds.size.width, 0.5f)];
+        topLineView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+        topLineView.backgroundColor = self.separatorColor;
+        [pickerView addSubview:topLineView];
+        
+        UIView *bottomLineView = [[UIView alloc]initWithFrame:CGRectMake(0, pickerView.bounds.size.height / 2 + self.rowHeight / 2, pickerView.bounds.size.width, 0.5f)];
+        bottomLineView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+        bottomLineView.backgroundColor = self.separatorColor;
+        [pickerView addSubview:bottomLineView];
+    }
 }
 
 @end

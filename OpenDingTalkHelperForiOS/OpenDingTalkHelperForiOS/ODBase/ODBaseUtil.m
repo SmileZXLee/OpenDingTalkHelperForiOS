@@ -192,6 +192,13 @@
         }];
     }else{
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+                UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
+                [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            } else {
+                [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+            }
             block(!([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone));
         });
     }
@@ -223,6 +230,7 @@
                         if (settings.authorizationStatus == UNAuthorizationStatusAuthorized){
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 [[UIApplication sharedApplication] registerForRemoteNotifications];
+                                [[NSNotificationCenter defaultCenter]postNotificationName:ODNotificationAuthoredKey object:nil];
                             });
                         }
                     }];
@@ -235,6 +243,7 @@
                 UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
                 [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
+                [[NSNotificationCenter defaultCenter]postNotificationName:ODNotificationAuthoredKey object:nil];
             }
         }
     }
@@ -412,6 +421,15 @@
     }else{
         [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKey];
     }
+}
+
+- (BOOL)isOpenedDingTalk{
+    return [ZXDataStoreCache readBoolForKey:ODIsOpenedDingTalkKey];
+}
+
+- (void)setIsOpenedDingTalk:(BOOL)isOpenedDingtalk{
+    [ZXDataStoreCache saveBool:isOpenedDingtalk forKey:ODIsOpenedDingTalkKey];
+    
 }
 
 

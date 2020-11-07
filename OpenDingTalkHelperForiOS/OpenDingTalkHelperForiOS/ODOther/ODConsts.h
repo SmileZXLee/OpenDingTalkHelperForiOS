@@ -12,9 +12,11 @@
 static NSString *const ODNoticeKey = @"od_noticed";
 static NSString *const ODStartTimeKey = @"od_startTime";
 static NSString *const ODEndTimeKey = @"od_endTime";
+static NSString *const ODIsOpenedDingTalkKey = @"od_isOpenedDingTalkKey";
 static NSString *const ODSecurityKey = @"od_security";
 static NSString *const ODSecurityPwdKey = @"od_security_pwd";
 
+static NSString *const ODNotificationAuthoredKey = @"od_notificationAuthored";
 static NSString *const ODReceiveNotificationKey = @"od_receiveNotification";
 
 #endif /* ODConsts_h */

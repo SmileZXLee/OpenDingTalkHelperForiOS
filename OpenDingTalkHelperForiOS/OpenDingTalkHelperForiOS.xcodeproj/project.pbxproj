@@ -517,18 +517,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenDingTalkHelperForiOS/Pods-OpenDingTalkHelperForiOS-resources.sh",
-				"${PODS_ROOT}/BRPickerView/BRPickerView/Base/BRPickerView.bundle",
-				"${PODS_ROOT}/ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBar.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-OpenDingTalkHelperForiOS/Pods-OpenDingTalkHelperForiOS-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BRPickerView.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZXNavigationBar.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-OpenDingTalkHelperForiOS/Pods-OpenDingTalkHelperForiOS-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
