@@ -26,7 +26,20 @@
 - [x] 一键息屏，降低能耗
 - [x] 密码保护，隐私无忧
 
-***
+## 安装
+
+### 如果您是iOS开发者
+* 下载项目并通过Xcode将OpenDingTalkHelperForiOS安装至您的设备上
+
+### 如果您不是iOS开发者
+#### [点击此处直接下载OpenDingTalkHelperForiOS安装包](http://www.zxlee.cn/github/OpenDingTalkHelperForiOS/OpenDingTalkHelperForiOS.ipa)
+#### 使用[Impactor](http://www.cydiaimpactor.com)进行重签名与安装
+* 点击上方链接进入官网，下载对应系统版本的安装包
+* 打开Impactor，将OpenDingTalkHelperForiOS.ipa拖入窗体中
+* 输入自己的AppleID账号和密码即可安装
+* 若您的AppleID开启了双重认证，请至[官网](https://appleid.apple.com/account/manage)设置并使用您的(APP-SPECIFIC PASSWORDS)
+* 普通用户签名有效期为7天，到期需按上方步骤重新签名，付费开发者不限制天数，若您担心影响开发者账号，可以重新注册一个账号。 
+
 
 ## 注意
 * 此应用【钉钉定时打卡助手】仅限用于定时打开钉钉，非定位修改软件，需要把手机放在公司。
@@ -39,7 +52,7 @@
 * 开发者不对使用此应用造成的任何后果负责，也无法保证应用一定不会出现跳转不了的情况，同样也无法保证应用无BUG，因此请您不要依赖此应用，仅可当作应急后备之用途，若有任何意见和反馈可以在issue中反馈，我会尽快为您解决。
 * 此应用是免费的，请勿用于任何商业用途，请勿用于马甲包等任何非法用途，请勿上架，转载请注明出处，感谢理解。
 
-***
+
 
 ## 预览
 <img src="http://www.zxlee.cn/OpenDingTalkHelperForiOSDemo1.gif"/>
