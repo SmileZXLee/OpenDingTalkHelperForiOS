@@ -33,7 +33,7 @@
 
 ### 如果您不是iOS开发者
 #### [点击此处直接下载OpenDingTalkHelperForiOS安装包](http://www.zxlee.cn/github/OpenDingTalkHelperForiOS/OpenDingTalkHelperForiOS.ipa)
-#### 使用[Impactor](http://www.cydiaimpactor.com)进行重签名与安装
+#### 使用[Impactor](http://www.cydiaimpactor.com)或[爱思助手](https://www.i4.cn/news_detail_38195.html)进行重签名与安装
 * 点击上方链接进入官网，下载对应系统版本的安装包
 * 打开Impactor，将OpenDingTalkHelperForiOS.ipa拖入窗体中
 * 输入自己的AppleID账号和密码即可安装
