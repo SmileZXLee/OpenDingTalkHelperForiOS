@@ -18,33 +18,24 @@
 - 支持`Masonry`
 - 支持密文显示
 - 支持自定义密文图片/view
-- 支持iOS8及以上操作系统
+- 支持动态修改codeLength
 
 > 该组件适用于短信验证码，密码输入框，手机号码输入框这些场景。<br/>希望你可以喜欢！
 
-
-## 重大更新！！！
-从1.0.0版本开始，无需通过继承的方式使用。通过设置`CRBoxInputCellProperty`中的对应Block，即可快速自定义需求。
-``` objc
-customSecurityViewBlock //自定义密文View
-customLineViewBlock     //自定义下划线
-configCellShadowBlock   //自定义阴影
-```
->此更新兼容1.0.0之前的版本
 
 ## Pod安装
 
 CRBoxInputView 可以通过 [CocoaPods](https://cocoapods.org). 来安装,  只需简单的在你的 Podfile 中添加如下代码:
 
 ```ruby
-pod 'CRBoxInputView', '1.1.7'
+pod 'CRBoxInputView', '1.2.1'
 ```
 
 
 ## 示列
 
 下载源代码后，可以从Example目录中执行 `pod install`，然后运行Demo。
-![iPhone 8 Copy 2.png](/ReadmeResources/ScreenShoot2.png "iPhone 8 Copy 2.png")
+![iPhone 8 Copy 2.png](/ReadmeResources/ScreenShoot3.png "iPhone 8 Copy 2.png")
 
 
 ## 快速指南
@@ -53,10 +44,11 @@ pod 'CRBoxInputView', '1.1.7'
 | [Base](#Anchor_Base) | ![Normal.png](/ReadmeResources/1Normal.png "Normal.png")  |
 | [Placeholder](#Anchor_Placeholder) | ![Placeholder.png](/ReadmeResources/Add1_Placeholder0.png "Placeholder.png")  |
 | [CustomBox](#Anchor_CustomBox)  | ![CustomBox.png](/ReadmeResources/2CustomBox.png "CustomBox.png")  |
-| [Line](#Anchor_Line)  | ![Line.png](/ReadmeResources/3Line.png "Line.png")  |
+| [Line](#Anchor_Line)  | ![Line.png](/ReadmeResources/3.1Line.png "Line.png")  |
 | [SecretSymbol](#Anchor_SecretSymbol)  | ![SecretSymbol.png](/ReadmeResources/4SecretSymbol.png "SecretSymbol.png")  |
 | [SecretImage](#Anchor_SecretImage)  | ![SecretImage.png](/ReadmeResources/5SecretImage.png "SecretImage.png")  |
 | [SecretView](#Anchor_SecretView)  | ![SecretView.png](/ReadmeResources/6SecretView.png "SecretView.png") |
+| [ResetCodeLength](#Anchor_ResetCodeLength)  | ![ResetCodeLength.png](/ReadmeResources/2ResetCodeLength.gif "ResetCodeLength.png")  |
 
 ## 使用说明
 
@@ -68,6 +60,13 @@ boxInputView.codeLength = 4;// 不设置时，默认4
 boxInputView.keyBoardType = UIKeyboardTypeNumberPad;// 不设置时，默认UIKeyboardTypeNumberPad
 [boxInputView loadAndPrepareViewWithBeginEdit:YES]; // BeginEdit:是否自动启用编辑模式
 [self.view addSubview:boxInputView];
+
+// 输入类型（纯数字）
+_boxInputView.inputType = CRInputType_Number;
+
+// 输入类型（正则表达式）
+//_boxInputView.inputType = CRInputType_Regex;
+//_boxInputView.customInputRegex = @"[^0-9]";
 
 // 获取值
 // 方法1, 当输入文字变化时触发回调block
@@ -92,7 +91,7 @@ CRBoxInputCellProperty *cellProperty = [CRBoxInputCellProperty new];
 cellProperty.cellPlaceholderTextColor = [UIColor colorWithRed:114/255.0 green:116/255.0 blue:124/255.0 alpha:0.3]; //可选
 cellProperty.cellPlaceholderFont = [UIFont systemFontOfSize:20]; //可选
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.ifNeedCursor = NO; //可选
 boxInputView.placeholderText = @"露可娜娜"; //必需
 boxInputView.customCellProperty = cellProperty;
@@ -123,7 +122,7 @@ cellProperty.configCellShadowBlock = ^(CALayer * _Nonnull layer) {
     layer.shadowRadius = 4;
 };
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.boxFlowLayout.itemSize = CGSizeMake(50, 50);
 boxInputView.customCellProperty = cellProperty;
 [boxInputView loadAndPrepareViewWithBeginEdit:YES];
@@ -133,7 +132,7 @@ boxInputView.customCellProperty = cellProperty;
 <br/>
 
 ### <a id="Anchor_Line"></a>Line
-![Line.png](/ReadmeResources/3Line.png "Line.png")
+![Line.png](/ReadmeResources/3.1Line.png "Line.png")
 ``` objc
 CRBoxInputCellProperty *cellProperty = [CRBoxInputCellProperty new];
 cellProperty.showLine = YES; //必需
@@ -147,10 +146,22 @@ cellProperty.customLineViewBlock = ^CRLineView * _Nonnull{
         make.left.right.bottom.offset(0);
     }];
 
+    lineView.selectChangeBlock = ^(CRLineView * _Nonnull lineView, BOOL selected) {
+        if (selected) {
+            [lineView.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(6);
+            }];
+        } else {
+            [lineView.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(4);
+            }];
+        }
+    };
+    
     return lineView;
 }; //可选
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.customCellProperty = cellProperty;
 [boxInputView loadAndPrepareViewWithBeginEdit:YES];
 ```
@@ -165,7 +176,7 @@ boxInputView.customCellProperty = cellProperty;
 CRBoxInputCellProperty *cellProperty = [CRBoxInputCellProperty new];
 cellProperty.securitySymbol = @"*"; //可选
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.ifNeedSecurity = YES; //必需（你可以在任何时候修改该属性，并且已经存在的文字会自动刷新。）
 boxInputView.customCellProperty = cellProperty;
 [boxInputView loadAndPrepareViewWithBeginEdit:NO];
@@ -191,7 +202,7 @@ cellProperty.customSecurityViewBlock = ^UIView * _Nonnull{
     return secrectImageView;
 }; //必需
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.ifNeedSecurity = YES; //必需（你可以在任何时候修改该属性，并且已经存在的文字会自动刷新。）
 boxInputView.customCellProperty = cellProperty;
 [boxInputView loadAndPrepareViewWithBeginEdit:YES];
@@ -224,12 +235,19 @@ cellProperty.customSecurityViewBlock = ^UIView * _Nonnull{
     return customSecurityView;
 }; //可选
 
-CRBoxInputView *boxInputView = [CRBoxInputView new];
+CRBoxInputView *boxInputView = [[CRBoxInputView alloc] initWithCodeLength:4];
 boxInputView.ifNeedSecurity = YES; //必需（你可以在任何时候修改该属性，并且已经存在的文字会自动刷新。）
 boxInputView.customCellProperty = cellProperty;
 [boxInputView loadAndPrepareViewWithBeginEdit:YES];
 ```
 
+<br/>
+
+
+### <a id="Anchor_ResetCodeLength"></a>ResetCodeLength
+``` objc
+[boxInputView resetCodeLength:_boxInputView.codeLength+1 beginEdit:YES];
+```
 
 <br/>
 

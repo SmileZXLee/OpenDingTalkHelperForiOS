@@ -1,1 +1,1 @@
-../../../ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBarSubViews/ZXNavTitleView.h
+../../../ZXNavigationBar/ZXNavigationBar/ZXNavigationBarSubViews/ZXNavTitleView.h

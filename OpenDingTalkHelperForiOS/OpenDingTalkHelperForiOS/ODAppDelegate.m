@@ -80,6 +80,7 @@ API_AVAILABLE(ios(10.0)){
             }else{
                 VC.type = ODSecurityTypeShowCover;
             }
+            VC.modalPresentationStyle = UIModalPresentationFullScreen;
             [self.window.rootViewController presentViewController:VC animated:NO completion:nil];
         }
         

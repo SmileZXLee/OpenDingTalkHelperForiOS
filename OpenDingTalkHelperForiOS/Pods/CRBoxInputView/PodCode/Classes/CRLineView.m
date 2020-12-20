@@ -48,4 +48,13 @@
     _lineView.layer.shadowRadius = 4;
 }
 
+- (void)setSelected:(BOOL)selected {
+    _selected = selected;
+    
+    if (self.selectChangeBlock) {
+        __weak __typeof(self)weakSelf = self;
+        self.selectChangeBlock(weakSelf, selected);
+    }
+}
+
 @end

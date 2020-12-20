@@ -1,1 +1,1 @@
-../../../ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBar.h
+../../../ZXNavigationBar/ZXNavigationBar/ZXNavigationBar.h

@@ -1,1 +1,1 @@
-../../../ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBarHelper/ZXNavigationBarCategory/UINavigationController+ZXNavBarAllHiddenExtension.h
+../../../ZXNavigationBar/ZXNavigationBar/ZXNavigationBarHelper/ZXNavigationBarCategory/UINavigationController+ZXNavBarAllHiddenExtension.h

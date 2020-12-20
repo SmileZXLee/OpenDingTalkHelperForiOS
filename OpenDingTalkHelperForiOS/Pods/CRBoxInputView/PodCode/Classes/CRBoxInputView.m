@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     BOOL _ifNeedBeginEdit;
 }
 
+@property (nonatomic, assign) NSInteger codeLength;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGR;
 @property (nonatomic, strong) CRBoxTextView *textView;
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
@@ -32,12 +33,24 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
 
 @implementation CRBoxInputView
 
-- (instancetype)initWithFrame:(CGRect)frame{
+- (instancetype)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         [self initDefaultValue];
         [self addNotificationObserver];
     }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self initDefaultValue];
+        [self addNotificationObserver];
+    }
+    
     return self;
 }
 
@@ -47,6 +60,18 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     if (self) {
         [self initDefaultValue];
         [self addNotificationObserver];
+    }
+    
+    return self;
+}
+
+- (instancetype _Nullable )initWithCodeLength:(NSInteger)codeLength
+{
+    self = [super init];
+    if (self) {
+        [self initDefaultValue];
+        [self addNotificationObserver];
+        self.codeLength = codeLength;
     }
     
     return self;
@@ -76,7 +101,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     // 重新进来后响应，光标动画重新开始
-    [_mainCollectionView reloadData];
+    [self reloadAllCell];
 }
 
 #pragma mark - You can inherit
@@ -88,6 +113,8 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     self.codeLength = 4;
     self.ifNeedCursor = YES;
     self.keyBoardType = UIKeyboardTypeNumberPad;
+    self.inputType = CRInputType_Number;
+    self.customInputRegex = @"";
     self.backgroundColor = [UIColor clearColor];
     _valueArr = [NSMutableArray new];
     _ifNeedBeginEdit = NO;
@@ -109,18 +136,21 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     [self generateCellPropertyArr];
     
     // mainCollectionView
-    [self addSubview:self.mainCollectionView];
-    [self.mainCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
-    }];
+    if (!self.mainCollectionView || ![self.subviews containsObject:self.mainCollectionView]) {
+        [self addSubview:self.mainCollectionView];
+        [self.mainCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
+    }
     
     // textView
-    [self addSubview:self.textView];
-    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(UIEdgeInsetsZero);
-        make.width.height.mas_equalTo(0);
-        make.left.top.mas_equalTo(0);
-    }];
+    if (!self.textView || ![self.subviews containsObject:self.textView]) {
+        [self addSubview:self.textView];
+        [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(0);
+            make.left.top.mas_equalTo(0);
+        }];
+    }
     
     // tap
     if (self.tapGR.view != self) {
@@ -145,6 +175,19 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     }
 }
 
+#pragma mark - code Length 调整
+- (void)resetCodeLength:(NSInteger)codeLength beginEdit:(BOOL)beginEdit
+{
+    if (codeLength<=0) {
+        NSAssert(NO, @"请输入大于0的验证码位数");
+        return;
+    }
+    
+    self.codeLength = codeLength;
+    [self generateCellPropertyArr];
+    [self clearAllWithBeginEdit:beginEdit];
+}
+
 #pragma mark - Reload Input View
 - (void)reloadInputString:(NSString *_Nullable)value
 {
@@ -167,7 +210,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         self.textEditStatusChangeblock(CRTextEditStatus_BeginEdit);
     }
     
-    [self.mainCollectionView reloadData];
+    [self reloadAllCell];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -178,7 +221,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         self.textEditStatusChangeblock(CRTextEditStatus_EndEdit);
     }
     
-    [self.mainCollectionView reloadData];
+    [self reloadAllCell];
 }
 
 #pragma mark - TextViewEdit
@@ -205,7 +248,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     [_valueArr removeAllObjects];
     self.textView.text = @"";
     [self allSecurityClose];
-    [self.mainCollectionView reloadData];
+    [self reloadAllCell];
     [self triggerBlock];
     
     if (beginEdit) {
@@ -219,17 +262,45 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
 }
 
 /**
+ * 过滤输入内容
+*/
+- (NSString *)filterInputContent:(NSString *)inputStr {
+    
+    NSMutableString *mutableStr = [[NSMutableString alloc] initWithString:inputStr];
+    if (self.inputType == CRInputType_Number) {
+        
+        /// 纯数字
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9]" options:0 error:nil];
+        [regex replaceMatchesInString:mutableStr options:0 range:NSMakeRange(0, [mutableStr length]) withTemplate:@""];
+    } else if (self.inputType == CRInputType_Normal) {
+        
+        /// 不处理
+        nil;
+    } else if (self.inputType == CRInputType_Regex) {
+        
+        /// 自定义正则
+        if (self.customInputRegex.length > 0) {
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:self.customInputRegex options:0 error:nil];
+            [regex replaceMatchesInString:mutableStr options:0 range:NSMakeRange(0, [mutableStr length]) withTemplate:@""];
+        }
+    }
+    
+    return [mutableStr copy];
+}
+
+/**
  * textDidChange基操作
  * manualInvoke：是否为手动调用
  */
 - (void)baseTextDidChange:(UITextField *)textField manualInvoke:(BOOL)manualInvoke  {
     
     __weak typeof(self) weakSelf = self;
-    
     NSString *verStr = textField.text;
     
     //有空格去掉空格
     verStr = [verStr stringByReplacingOccurrencesOfString:@" " withString:@""];
+    verStr = [self filterInputContent:verStr];
+    
     if (verStr.length >= _codeLength) {
         verStr = [verStr substringToIndex:_codeLength];
         [self endEdit];
@@ -274,7 +345,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
             }
         }
     }
-    [_mainCollectionView reloadData];
+    [self reloadAllCell];
     
     _oldLength = verStr.length;
     
@@ -350,7 +421,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         if (strongSelf.valueArr.count > 0) {
             [strongSelf replaceValueArrToAsteriskWithIndex:strongSelf.valueArr.count-1 needEqualToCount:YES];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [strongSelf.mainCollectionView reloadData];
+                [strongSelf reloadAllCell];
             });
         }
     }];
@@ -365,7 +436,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         [strongSelf replaceValueArrToAsteriskWithIndex:idx needEqualToCount:NO];
     }];
     
-    [self.mainCollectionView reloadData];
+    [self reloadAllCell];
 }
 
 #pragma mark - DelayBlock
@@ -424,6 +495,19 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
     return tempCell;
 }
 
+- (void)reloadAllCell
+{
+    [self.mainCollectionView reloadData];
+
+    NSUInteger focusIndex = _valueArr.count;
+    /// 最后一个
+    if (focusIndex == self.codeLength) {
+        [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:focusIndex - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+    } else {
+        [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:focusIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    }
+}
+
 #pragma mark - Qiuck set
 - (void)quickSetSecuritySymbol:(NSString *)securitySymbol
 {
@@ -459,8 +543,8 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         _mainCollectionView.backgroundColor = [UIColor clearColor];
         _mainCollectionView.delegate = self;
         _mainCollectionView.dataSource = self;
-        _mainCollectionView.layer.masksToBounds = NO;
-        _mainCollectionView.clipsToBounds = NO;
+        _mainCollectionView.layer.masksToBounds = YES;
+        _mainCollectionView.clipsToBounds = YES;
         [_mainCollectionView registerClass:[CRBoxInputCell class] forCellWithReuseIdentifier:CRBoxInputCellID];
     }
     
@@ -553,7 +637,7 @@ typedef NS_ENUM(NSInteger, CRBoxTextChangeType) {
         [self allSecurityClose];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.mainCollectionView reloadData];
+        [self reloadAllCell];
     });
 }
 

@@ -1,1 +1,1 @@
-../../../ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBarHelper/ZXNavigationBarCategory/UIImage+ZXNavColorRender.h
+../../../ZXNavigationBar/ZXNavigationBar/ZXNavigationBarHelper/ZXNavigationBarCategory/UIImage+ZXNavColorRender.h

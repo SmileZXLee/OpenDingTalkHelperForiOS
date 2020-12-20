@@ -1,1 +1,1 @@
-../../../ZXNavigationBar/ZXNavigationBarDemo/ZXNavigationBarDemo/ZXNavigationBar/ZXNavigationBarController.h
+../../../ZXNavigationBar/ZXNavigationBar/ZXNavigationBarController.h

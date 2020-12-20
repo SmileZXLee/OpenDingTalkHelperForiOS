@@ -93,9 +93,6 @@
     boxInputView.ifNeedSecurity = YES;
     boxInputView.customCellProperty = cellProperty;
     [boxInputView loadAndPrepareViewWithBeginEdit:self.type != ODSecurityTypeShowCover];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        boxInputView.frame = self.securityView.bounds;
-    });
     boxInputView.textDidChangeblock = ^(NSString * _Nullable text, BOOL isFinished) {
         weakSelf.titleLabel.text = text;
         if(weakSelf.type == ODSecurityTypeSetPwd){
@@ -123,6 +120,11 @@
         self.confirmBtn.enabled = NO;
         self.confirmBtn.backgroundColor = [UIColor lightGrayColor];
     }
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    self.boxInputView.frame = self.securityView.bounds;
 }
 
 - (void)animateShowTitle:(CADisplayLink *)cl{
