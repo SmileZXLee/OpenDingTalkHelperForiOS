@@ -8,19 +8,35 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
+typedef enum {
+    ODTimeTypeGoToWork = 0x01,    // 上班打卡
+    ODTimeTypeGoOffWork = 0x02,    // 下班打卡
+}ODTimeType;
+
 NS_ASSUME_NONNULL_BEGIN
 typedef void (^ __nullable od_checkUserNotificationEnableBlock)(BOOL enable);
 @interface ODBaseUtil : NSObject
 
 /**
- 开始时间
+ 开始时间（上班时间）
  */
-@property (copy, nonatomic)NSString *od_startTime;
+@property (copy, nonatomic)NSString *od_startTimeForGoToWork;
 
 /**
- 结束时间
+ 结束时间（上班时间）
  */
-@property (copy, nonatomic)NSString *od_endTime;
+@property (copy, nonatomic)NSString *od_endTimeForGoToWork;
+
+/**
+ 开始时间（下班时间）
+ */
+@property (copy, nonatomic)NSString *od_startTimeForGoOffWork;
+
+/**
+ 结束时间（下班时间）
+ */
+@property (copy, nonatomic)NSString *od_endTimeForGoOffWork;
 
 /**
  是否已经第一次打开过钉钉
@@ -91,9 +107,10 @@ typedef void (^ __nullable od_checkUserNotificationEnableBlock)(BOOL enable);
  添加本地推送
 
  @param nextHm 本地推送时间(hh:mm)
+ @param timeType 时间类型
  @return 本地推送具体时间(yyyy-mm-dd(week) hh:mm:ss)
  */
-+ (NSString *)addLocalNoticeNextHm:(NSString *)nextHm;
++ (NSString *)addLocalNoticeNextHm:(NSString *)nextHm type:(ODTimeType)timeType;
 
 /**
  获取当前时间(yyyy-mm-dd hh:mm:ss)

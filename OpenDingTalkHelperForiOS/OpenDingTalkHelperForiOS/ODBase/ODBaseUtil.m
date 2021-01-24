@@ -250,13 +250,13 @@
 }
 
 #pragma mark 添加本地推送
-+ (NSString *)addLocalNoticeNextHm:(NSString *)nextHm{
-    NSDateFormatter *fullFormat=[[NSDateFormatter alloc] init];
++ (NSString *)addLocalNoticeNextHm:(NSString *)nextHm type:(ODTimeType)timeType{
+    NSDateFormatter *fullFormat = [[NSDateFormatter alloc] init];
     NSDate *date = [NSDate date];
     [fullFormat setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
     NSString *fullNextStr = [self getNextFullTimeHm:nextHm];
     if([fullNextStr isEqualToString:@"永不"]){
-        [self removeLocalNotice];
+        [self removeLocalNoticeWithType:timeType];
         return fullNextStr;
     }
     NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -270,17 +270,17 @@
     if(@available(iOS 10.0, *)) {
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-        content.title = @"订单定时打卡助手";
+        content.title = timeType == ODTimeTypeGoToWork ? @"钉钉定时打卡助手(上班打卡)" : @"钉钉定时打卡助手(下班打卡)";
         content.body = @"请务必不要退到后台，保持此应用始终在前台，并保持充足电量！";
         NSTimeInterval time = [[NSDate dateWithTimeIntervalSinceNow:disSec] timeIntervalSinceNow];
         UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:NO];
-        NSString *identifier = @"od_noticeId";
+        NSString *identifier = timeType == ODTimeTypeGoToWork ? @"od_noticeId_to" : @"od_noticeId_off";
         UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
-        
         [center addNotificationRequest:request withCompletionHandler:^(NSError *_Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                //[self showToast:@"推送添加成功"];
-                
+                if(!error){
+                    //[self showToast:@"推送添加成功"];
+                }
             });
         }];
     }else {
@@ -301,13 +301,14 @@
 }
 
 #pragma mark 移除本地推送
-+ (void)removeLocalNotice{
++ (void)removeLocalNoticeWithType:(ODTimeType)timeType{
+    NSString *alertTitle = timeType == ODTimeTypeGoToWork ? @"钉钉定时打卡助手(上班打卡)" : @"钉钉定时打卡助手(下班打卡)";
     NSArray *localNotificationArray= [[UIApplication sharedApplication] scheduledLocalNotifications];
     NSUInteger acount = [localNotificationArray count];
     if (acount > 0){
         for (int i = 0;i < acount;i++){
             UILocalNotification *myUILocalNotification = [localNotificationArray objectAtIndex:i];
-            if([myUILocalNotification.alertTitle isEqualToString:@"订单定时打卡助手"]){
+            if([myUILocalNotification.alertTitle isEqualToString:alertTitle]){
                 [[UIApplication sharedApplication] cancelLocalNotification:myUILocalNotification];
                 break;
             }
@@ -387,39 +388,75 @@
 }
 
 #pragma mark - getter&setter
-- (NSString *)od_startTime{
-    return [ZXDataStoreCache readObjForKey:ODStartTimeKey];
+- (NSString *)od_startTimeForGoToWork{
+    return [ZXDataStoreCache readObjForKey:ODStartTimeKeyForGoToWork];
 }
-- (void)setOd_startTime:(NSString *)od_startTime{
-    NSString *endTime = self.od_endTime;
+- (void)setOd_startTimeForGoToWork:(NSString *)od_startTime{
+    NSString *endTime = self.od_endTimeForGoToWork;
     if(endTime.length){
         long disSec = [[self class]getDistanceBetweenHm:od_startTime nextHm:endTime];
         if(disSec > 0){
-            [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKey];
+            [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKeyForGoToWork];
         }else{
             [[self class]showToast:[NSString stringWithFormat:@"设置失败，起始时间不得大于等于结束时间"]];
         }
     }else{
-        [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKey];
+        [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKeyForGoToWork];
     }
     
 }
 
 
-- (NSString *)od_endTime{
-    return [ZXDataStoreCache readObjForKey:ODEndTimeKey];
+- (NSString *)od_endTimeForGoToWork{
+    return [ZXDataStoreCache readObjForKey:ODEndTimeKeyForGoToWork];
 }
-- (void)setOd_endTime:(NSString *)od_endTime{
-    NSString *startTime = self.od_startTime;
+- (void)setOd_endTimeForGoToWork:(NSString *)od_endTime{
+    NSString *startTime = self.od_startTimeForGoToWork;
     if(startTime.length){
         long disSec = [[self class]getDistanceBetweenHm:startTime nextHm:od_endTime];
         if(disSec > 0){
-            [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKey];
+            [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKeyForGoToWork];
         }else{
             [[self class]showToast:[NSString stringWithFormat:@"设置失败，结束时间不得小于等于起始时间"]];
         }
     }else{
-        [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKey];
+        [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKeyForGoToWork];
+    }
+}
+
+- (NSString *)od_startTimeForGoOffWork{
+    return [ZXDataStoreCache readObjForKey:ODStartTimeKeyForGoOffWork];
+}
+- (void)setOd_startTimeForGoOffWork:(NSString *)od_startTime{
+    NSString *endTime = self.od_endTimeForGoOffWork;
+    if(endTime.length){
+        long disSec = [[self class]getDistanceBetweenHm:od_startTime nextHm:endTime];
+        if(disSec > 0){
+            [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKeyForGoOffWork];
+        }else{
+            [[self class]showToast:[NSString stringWithFormat:@"设置失败，起始时间不得大于等于结束时间"]];
+        }
+    }else{
+        [ZXDataStoreCache saveObj:od_startTime forKey:ODStartTimeKeyForGoOffWork];
+    }
+    
+}
+
+
+- (NSString *)od_endTimeForGoOffWork{
+    return [ZXDataStoreCache readObjForKey:ODEndTimeKeyForGoOffWork];
+}
+- (void)setOd_endTimeForGoOffWork:(NSString *)od_endTime{
+    NSString *startTime = self.od_startTimeForGoOffWork;
+    if(startTime.length){
+        long disSec = [[self class]getDistanceBetweenHm:startTime nextHm:od_endTime];
+        if(disSec > 0){
+            [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKeyForGoOffWork];
+        }else{
+            [[self class]showToast:[NSString stringWithFormat:@"设置失败，结束时间不得小于等于起始时间"]];
+        }
+    }else{
+        [ZXDataStoreCache saveObj:od_endTime forKey:ODEndTimeKeyForGoOffWork];
     }
 }
 

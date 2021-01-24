@@ -20,6 +20,7 @@
 #import "ODWeekSelectModel.h"
 #import "UIView+ZXEmptyViewKVO.h"
 static CGFloat oldBrightness = -1;
+
 @interface ODHomeVC ()
 @property (weak, nonatomic) IBOutlet ZXTableView *tableView;
 
@@ -67,10 +68,14 @@ static CGFloat oldBrightness = -1;
         if(section == 0){
             headerLabel.text = @"状态";
         }else if(section == 1){
-            headerLabel.text = @"自动打卡时间";
+            headerLabel.text = @"【上班】自动打卡时间";
         }else if(section == 2){
-            headerLabel.text = @"功能测试";
+            headerLabel.text = @"【下班】自动打卡时间";
         }else if(section == 3){
+            headerLabel.text = @"打卡星期";
+        }else if(section == 4){
+            headerLabel.text = @"功能测试";
+        }else if(section == 5){
             headerLabel.text = @"其他";
         }
         [headerView addSubview:headerLabel];
@@ -81,19 +86,51 @@ static CGFloat oldBrightness = -1;
         return 35;
     };
     self.tableView.zx_didSelectedAtIndexPath = ^(NSIndexPath * _Nonnull indexPath, ODHomeModel * _Nonnull model, id  _Nonnull cell) {
-        if([model.title isEqualToString:@"打卡起始时间"] || [model.title isEqualToString:@"打卡结束时间"]){
-            [BRDatePickerView showDatePickerWithMode:BRDatePickerModeTime title:[NSString stringWithFormat:@"设置%@",model.title] selectValue:nil resultBlock:^(NSDate * _Nullable selectDate, NSString * _Nullable selectValue) {
-                if([model.title isEqualToString:@"打卡起始时间"]){
-                    [ODBaseUtil shareInstance].od_startTime = selectValue;
-                    [weakSelf updateTimeStartModel];
+        if([model.title containsString:@"打卡起始时间"] || [model.title containsString:@"打卡结束时间"]){
+            NSString *selectValue = model.detail;
+            if(![model.detail containsString:@":"]){
+                if([model.title containsString:@"打卡起始时间"]){
+                    if([model.title hasPrefix:@"【上班】"]){
+                        selectValue = @"08:30";
+                    }else{
+                        selectValue = @"17:30";
+                    }
                 }else{
-                    [ODBaseUtil shareInstance].od_endTime = selectValue;
-                    [weakSelf updateTimeEndModel];
+                    if([model.title hasPrefix:@"【上班】"]){
+                        selectValue = @"09:00";
+                    }else{
+                        selectValue = @"18:00";
+                    }
+                }
+            }
+            
+            [BRDatePickerView showDatePickerWithMode:BRDatePickerModeHM title:[NSString stringWithFormat:@"设置%@",model.title] selectValue:selectValue resultBlock:^(NSDate * _Nullable selectDate, NSString * _Nullable selectValue) {
+                if([model.title containsString:@"打卡起始时间"]){
+                    if([model.title hasPrefix:@"【上班】"]){
+                        [ODBaseUtil shareInstance].od_startTimeForGoToWork = selectValue;
+                        [weakSelf updateTimeStartModelForType:ODTimeTypeGoToWork];
+                    }else{
+                        [ODBaseUtil shareInstance].od_startTimeForGoOffWork = selectValue;
+                        [weakSelf updateTimeStartModelForType:ODTimeTypeGoOffWork];
+                    }
+                }else{
+                    if([model.title hasPrefix:@"【上班】"]){
+                        [ODBaseUtil shareInstance].od_endTimeForGoToWork = selectValue;
+                        [weakSelf updateTimeEndModelForType:ODTimeTypeGoToWork];
+                    }else{
+                        [ODBaseUtil shareInstance].od_endTimeForGoOffWork = selectValue;
+                        [weakSelf updateTimeEndModelForType:ODTimeTypeGoOffWork];
+                    }
                 }
             }];
-        }else if([model.title isEqualToString:@"下次打卡时间"]){
-            [weakSelf updateTimeCurrentModel];
-            [ODBaseUtil showToast:@"下次打卡时间已刷新"];
+        }else if([model.title containsString:@"下次打卡时间"]){
+            if([model.title hasPrefix:@"【上班】"]){
+                [weakSelf updateTimeCurrentModelForType:ODTimeTypeGoToWork];
+                [ODBaseUtil showToast:@"上班打卡时间已刷新"];
+            }else{
+                [weakSelf updateTimeCurrentModelForType:ODTimeTypeGoOffWork];
+                [ODBaseUtil showToast:@"下班打卡时间已刷新"];
+            }
         }else if([model.title isEqualToString:@"测试打开钉钉"]){
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"防误触提示" message:@"请再次确定您要打开钉钉吗？" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
@@ -106,6 +143,11 @@ static CGFloat oldBrightness = -1;
         }else if([model.title isEqualToString:@"开源地址"]){
             [UIPasteboard generalPasteboard].string = @"https://github.com/SmileZXLee/OpenDingTalkHelperForiOS";
             [ODBaseUtil showToast:@"已复制到剪切板"];
+        }else if([model.title isEqualToString:@"加入反馈QQ群"]){
+            NSString *urlStr = @"https://jq.qq.com/?_wv=1027&k=vU2fKZZH";
+            if([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:urlStr]]){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+            }
         }else if([model.detail isEqualToString:@"未开启推送权限"]){
             [ODBaseUtil openSetting];
         }else if([model.title isEqualToString:@"自动打卡记录"]){
@@ -174,16 +216,28 @@ static CGFloat oldBrightness = -1;
     statusModel.detail = @"已就绪";
     
     ODHomeModel *timeStartModel = [[ODHomeModel alloc]init];
-    timeStartModel.title = @"打卡起始时间";
+    timeStartModel.title = @"【上班】打卡起始时间";
     timeStartModel.detail = @"点击设置";
     
     ODHomeModel *timeEndModel = [[ODHomeModel alloc]init];
-    timeEndModel.title = @"打卡结束时间";
+    timeEndModel.title = @"【上班】打卡结束时间";
     timeEndModel.detail = @"点击设置";
     
     ODHomeModel *currentTimeModel = [[ODHomeModel alloc]init];
-    currentTimeModel.title = @"下次打卡时间";
+    currentTimeModel.title = @"【上班】下次打卡时间";
     currentTimeModel.detail = @"在设定范围内随机";
+    
+    ODHomeModel *timeStartModel2 = [[ODHomeModel alloc]init];
+    timeStartModel2.title = @"【下班】打卡起始时间";
+    timeStartModel2.detail = @"点击设置";
+    
+    ODHomeModel *timeEndModel2 = [[ODHomeModel alloc]init];
+    timeEndModel2.title = @"【下班】打卡结束时间";
+    timeEndModel2.detail = @"点击设置";
+    
+    ODHomeModel *currentTimeModel2 = [[ODHomeModel alloc]init];
+    currentTimeModel2.title = @"【下班】下次打卡时间";
+    currentTimeModel2.detail = @"在设定范围内随机";
     
     ODHomeModel *weekModel = [[ODHomeModel alloc]init];
     weekModel.title = @"星期";
@@ -211,15 +265,23 @@ static CGFloat oldBrightness = -1;
     aboutModel.title = @"开源地址";
     aboutModel.detail = @"点击复制";
     
+    ODHomeModel *feedBackGroupModel = [[ODHomeModel alloc]init];
+    feedBackGroupModel.title = @"加入反馈QQ群";
+    feedBackGroupModel.detail = @"";
+    
     self.tableView.zxDatas = [@[@[statusModel],
                                 
-                               @[timeStartModel,timeEndModel,currentTimeModel,weekModel],
-                                    @[jumpTestModel],
-                                @[recordsModel,keepBrightnessModel,securityModel,helpModel,aboutModel],
+                               @[timeStartModel,timeEndModel,currentTimeModel],
+                                @[timeStartModel2,timeEndModel2,currentTimeModel2],
+                                @[weekModel],
+                                @[jumpTestModel],
+                                @[recordsModel,keepBrightnessModel,securityModel,helpModel,aboutModel,feedBackGroupModel]
                                 
                                ]mutableCopy];
-    [self updateTimeStartModel];
-    [self updateTimeEndModel];
+    [self updateTimeStartModelForType:ODTimeTypeGoToWork];
+    [self updateTimeStartModelForType:ODTimeTypeGoOffWork];
+    [self updateTimeEndModelForType:ODTimeTypeGoToWork];
+    [self updateTimeEndModelForType:ODTimeTypeGoOffWork];
     [self updateWeekModel];
 }
 
@@ -300,14 +362,14 @@ static CGFloat oldBrightness = -1;
     }else if(![ODBaseUtil is24HourFormat]){
         statusModel.detail = @"系统时间需设置为24小时制";
     }else{
-        NSString *startTime = [ODBaseUtil shareInstance].od_startTime;
-         NSString *endTime = [ODBaseUtil shareInstance].od_endTime;
-        if(!startTime.length){
-            statusModel.detail = @"未设置起始时间";
-        }else if(!endTime.length){
-            statusModel.detail = @"未设置结束时间";
-        }else{
+        NSString *startTimeForGoToWork = [ODBaseUtil shareInstance].od_startTimeForGoToWork;
+        NSString *endTimeForGoToWork = [ODBaseUtil shareInstance].od_endTimeForGoToWork;
+        NSString *startTimeForGoOffWork = [ODBaseUtil shareInstance].od_startTimeForGoOffWork;
+        NSString *endTimeForGoOffWork = [ODBaseUtil shareInstance].od_endTimeForGoOffWork;
+        if((startTimeForGoToWork.length && endTimeForGoToWork.length) || (startTimeForGoOffWork.length && endTimeForGoOffWork.length)){
             statusModel.detail = @"已就绪";
+        }else{
+            statusModel.detail = @"请至少设置一组上班或下班的打卡起始和结束时间";
         }
     }
     if([statusModel.detail isEqualToString:@"已就绪"]){
@@ -322,46 +384,99 @@ static CGFloat oldBrightness = -1;
 }
 
 #pragma mark 更新“打卡开始时间”
-- (void)updateTimeStartModel{
-    NSString *startTime = [ODBaseUtil shareInstance].od_startTime;
-    ODHomeModel *timeStartModel = self.tableView.zxDatas[1][0];
+- (void)updateTimeStartModelForType:(ODTimeType)timeType{
+    NSUInteger section = 0;
+    NSUInteger row = 0;
+    NSString *startTime;
+    if(timeType == ODTimeTypeGoToWork){
+        section = 1;
+        row = 0;
+        startTime = [ODBaseUtil shareInstance].od_startTimeForGoToWork;
+    }else{
+        section = 2;
+        row = 0;
+        startTime = [ODBaseUtil shareInstance].od_startTimeForGoOffWork;
+    }
+    if(!startTime){
+        return;
+    }
+    ODHomeModel *timeStartModel = self.tableView.zxDatas[section][row];
     timeStartModel.detail = startTime;
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:0];
-    [self updateTimeCurrentModel];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]] withRowAnimation:0];
+    [self updateTimeCurrentModelForType:timeType];
     [self updateStatusModel];
 }
 
 #pragma mark 更新“打卡结束时间”
-- (void)updateTimeEndModel{
-    NSString *endTime = [ODBaseUtil shareInstance].od_endTime;
-    ODHomeModel *timeEndModel = self.tableView.zxDatas[1][1];
+- (void)updateTimeEndModelForType:(ODTimeType)timeType{
+    NSUInteger section = 0;
+    NSUInteger row = 0;
+    NSString *endTime;
+    if(timeType == ODTimeTypeGoToWork){
+        section = 1;
+        row = 1;
+        endTime = [ODBaseUtil shareInstance].od_endTimeForGoToWork;
+    }else{
+        section = 2;
+        row = 1;
+        endTime = [ODBaseUtil shareInstance].od_endTimeForGoOffWork;
+    }
+    if(!endTime){
+        return;
+    }
+    ODHomeModel *timeEndModel = self.tableView.zxDatas[section][row];
     timeEndModel.detail = endTime;
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:1]] withRowAnimation:0];
-    [self updateTimeCurrentModel];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]] withRowAnimation:0];
+    [self updateTimeCurrentModelForType:timeType];
     [self updateStatusModel];
 }
 
-#pragma mark 更新“下次打卡时间”
+#pragma mark 根据具体选择更新“下次打卡时间”
 - (void)updateTimeCurrentModel{
-    NSString *startTime = [ODBaseUtil shareInstance].od_startTime;
-    NSString *endTime = [ODBaseUtil shareInstance].od_endTime;
-    ODHomeModel *timeCurrentModel = self.tableView.zxDatas[1][2];
+    if([ODBaseUtil shareInstance].od_startTimeForGoToWork && [ODBaseUtil shareInstance].od_endTimeForGoToWork){
+        [self updateTimeCurrentModelForType:ODTimeTypeGoToWork];
+    }
+    if([ODBaseUtil shareInstance].od_startTimeForGoOffWork && [ODBaseUtil shareInstance].od_endTimeForGoOffWork){
+        [self updateTimeCurrentModelForType:ODTimeTypeGoOffWork];
+    }
+}
+
+#pragma mark 更新“下次打卡时间”
+- (void)updateTimeCurrentModelForType:(ODTimeType)timeType{
+    NSString *startTime;
+    NSString *endTime;
+    NSUInteger section = 0;
+    NSUInteger row = 0;
+    NSString *errStr;
+    if(timeType == ODTimeTypeGoToWork){
+        section = 1;
+        row = 2;
+        startTime = [ODBaseUtil shareInstance].od_startTimeForGoToWork;
+        endTime = [ODBaseUtil shareInstance].od_endTimeForGoToWork;
+        errStr = @"请设置上班起始与结束时间";
+    }else{
+        section = 2;
+        row = 2;
+        startTime = [ODBaseUtil shareInstance].od_startTimeForGoOffWork;
+        endTime = [ODBaseUtil shareInstance].od_endTimeForGoOffWork;
+        errStr = @"请设置下班起始与结束时间";
+    }
+    ODHomeModel *timeCurrentModel = self.tableView.zxDatas[section][row];
     if(startTime.length && endTime.length){
         long startMin = [ODBaseUtil getTotalMinsHm:startTime];
         long endMin = [ODBaseUtil getTotalMinsHm:endTime];
         long currentMin= [ODBaseUtil getRandomNumber:startMin to: endMin - 1];
         timeCurrentModel.detail = [ODBaseUtil getHmWithTotalMinutes:currentMin];
-        timeCurrentModel.detail = [ODBaseUtil addLocalNoticeNextHm:timeCurrentModel.detail];
-        
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:0];
+        timeCurrentModel.detail = [ODBaseUtil addLocalNoticeNextHm:timeCurrentModel.detail type:timeType];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]] withRowAnimation:0];
     }else{
-        [ODBaseUtil showToast:@"请设置起始与结束时间"];
+        [ODBaseUtil showToast:errStr];
     }
 }
 
 #pragma mark 更新“星期”
 - (void)updateWeekModel{
-    ODHomeModel *weekModel = self.tableView.zxDatas[1][3];
+    ODHomeModel *weekModel = self.tableView.zxDatas[3][0];
     NSString *weekdetail = @"";
     NSArray *selectedArray = [ODWeekSelectModel zx_dbQuaryWhere:@""];
     if(!selectedArray)return;
@@ -382,7 +497,7 @@ static CGFloat oldBrightness = -1;
     if([weekModel.detail isEqualToString:@"1、2、3、4、5"]){
         weekModel.detail = @"每工作日";
     }
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:1]] withRowAnimation:0];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:0];
     [self updateTimeCurrentModel];
     
 }
