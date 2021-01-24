@@ -32,6 +32,7 @@ static CGFloat oldBrightness = -1;
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
+    [self updateStatusModel];
     [self setupNoticeAndNotification];
 }
 #pragma mark - 初始化操作
@@ -369,7 +370,7 @@ static CGFloat oldBrightness = -1;
         if((startTimeForGoToWork.length && endTimeForGoToWork.length) || (startTimeForGoOffWork.length && endTimeForGoOffWork.length)){
             statusModel.detail = @"已就绪";
         }else{
-            statusModel.detail = @"请至少设置一组上班或下班的打卡起始和结束时间";
+            statusModel.detail = @"请设置打卡起始和结束时间";
         }
     }
     if([statusModel.detail isEqualToString:@"已就绪"]){
