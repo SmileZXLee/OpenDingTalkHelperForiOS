@@ -516,7 +516,7 @@ static CGFloat oldBrightness = -1;
             enableSecurity = !enableSecurity;
             [ZXDataStoreCache saveBool:NO forKey:ODSecurityKey];
             securityModel.detail = @"关闭";
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:3]] withRowAnimation:0];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:5]] withRowAnimation:0];
         };
         [self presentViewController:VC animated:YES completion:nil];
     }else{
@@ -526,7 +526,7 @@ static CGFloat oldBrightness = -1;
             enableSecurity = !enableSecurity;
             [ZXDataStoreCache saveBool:YES forKey:ODSecurityKey];
             securityModel.detail = @"开启";
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:3]] withRowAnimation:0];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:5]] withRowAnimation:0];
         };
         [self presentViewController:VC animated:YES completion:nil];
     }
