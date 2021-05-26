@@ -506,7 +506,7 @@ static CGFloat oldBrightness = -1;
 
 #pragma mark 更新“密码保护”
 - (void)updateSecurity{
-    ODHomeModel *securityModel = self.tableView.zxDatas[3][2];
+    ODHomeModel *securityModel = self.tableView.zxDatas[5][2];
     __block BOOL enableSecurity = [ZXDataStoreCache readBoolForKey:ODSecurityKey];
     __weak typeof(self) weakSelf = self;
     if(enableSecurity){

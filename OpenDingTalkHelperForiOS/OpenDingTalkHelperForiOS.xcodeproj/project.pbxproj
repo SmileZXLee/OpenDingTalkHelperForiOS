@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -705,7 +705,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X3UA5897T2;
+				DEVELOPMENT_TEAM = D7TL597S9J;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OpenDingTalkHelperForiOS/ODOther/ODPrefixHeader.pch";
 				INFOPLIST_FILE = OpenDingTalkHelperForiOS/Info.plist;
@@ -714,7 +714,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cn.zxlee.OpenDingTalkHelperForiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = cn.zxlee.OpenDingTalkHelperForiOS4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -726,7 +726,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X3UA5897T2;
+				DEVELOPMENT_TEAM = D7TL597S9J;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OpenDingTalkHelperForiOS/ODOther/ODPrefixHeader.pch";
 				INFOPLIST_FILE = OpenDingTalkHelperForiOS/Info.plist;
@@ -735,7 +735,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cn.zxlee.OpenDingTalkHelperForiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = cn.zxlee.OpenDingTalkHelperForiOS4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
