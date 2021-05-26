@@ -1,5 +1,7 @@
 # OpenDingTalkHelperForiOS
 
+## 【推荐】钉钉打卡助手uni-app版，支持iOS和安卓，无需签名👉 https://github.com/SmileZXLee/uni-dingTalkHelper
+
 ## OpenDingTalkHelperForiOS的开发离不开以下第三方框架
 * ToastView: [ALToastView](https://github.com/alexleutgoeb/ALToastView)
 * ToastView: UIView+Toast
@@ -18,6 +20,8 @@
 ## OpenDingTalkHelperForiOS的开发离不开[@kunlingyijia](https://github.com/kunlingyijia)的idea和建议
 
 ***
+
+### 反馈&交流qq群：[790460711](https://jq.qq.com/?_wv=1027&k=vU2fKZZH)
 
 ## 功能&特点
 - [x] 支持自定义设置上班/下班打卡时间区间
@@ -41,6 +45,7 @@
 * 若您的AppleID开启了双重认证，请至[官网](https://appleid.apple.com/account/manage)设置并使用您的(APP-SPECIFIC PASSWORDS)
 * 普通用户签名有效期为7天，到期需按上方步骤重新签名，付费开发者不限制天数，若您担心影响开发者账号，可以重新注册一个账号。 
 
+### 如果签名失败，推荐使用上方uniapp版，无需签名。
 
 ## 注意
 * 此应用【钉钉定时打卡助手】仅限用于定时打开钉钉，非定位修改软件，需要把手机放在公司。
