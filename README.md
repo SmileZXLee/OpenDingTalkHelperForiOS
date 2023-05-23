@@ -1,5 +1,7 @@
 # OpenDingTalkHelperForiOS
 
+## [说明]此应用仅用于定时跳转钉钉，非定位修改软件，只有定时打开钉钉这一个功能，并且打开后要手动切回原App，否则只能定时跳转钉钉一次
+
 ## 【推荐】钉钉打卡助手uni-app版，支持iOS和安卓👉 https://github.com/SmileZXLee/uni-dingTalkHelper
 
 ## OpenDingTalkHelperForiOS的开发离不开以下第三方框架
